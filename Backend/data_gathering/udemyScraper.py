@@ -1,3 +1,11 @@
+'''
+When running this script make sure that the chrmodriver that is being used is for your specific OS
+
+The pyvirtualdsiplay allows the scraper to run on the GCP VM using a headless chrome browser
+
+Todo: add error catching and logging
+	  add proper display start and stop
+'''
 from bs4 import BeautifulSoup
 from selenium import webdriver
 import requests
@@ -5,12 +13,16 @@ import time
 import pickle
 import os
 from data_classes import Course,Instructor
+from pyvirtualdisplay import Display
+
+display = Display(visible=0,size=(800,600))
+display.start()
 
 def loadJSPage(url):
-	browser = webdriver.Chrome(os.path.dirname(os.path.abspath(__file__)) + '/chromedriver')
+	browser = webdriver.Chrome(os.path.dirname(os.path.abspath(__file__)) + '/chromedriver')#,chrome_options=options)
 	browser.get(url)
 	#replace with wait until specific element ID is loaded
-	time.sleep(8)
+	time.sleep(20)
 	soup = BeautifulSoup(browser.page_source, "html.parser")
 	browser.close()
 	return soup
@@ -22,7 +34,7 @@ def getCourses(fileName):
 
 	#Currently there are 44 pages of courses, add a function later on to fetch this number so it doesnt
 	#have to be maintained
-	for i in range(1,2):
+	for i in range(1,44):
 		base = "https://www.udemy.com/courses/business/data-and-analytics/all-courses/?p={}".format(i)
 		soup = loadJSPage(base)
 
