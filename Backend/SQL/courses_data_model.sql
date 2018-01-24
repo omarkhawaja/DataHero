@@ -31,3 +31,31 @@ CREATE TABLE Courses (
 	FOREIGN KEY (course_provider_id) REFERENCES Course_providors(id),
 	PRIMARY KEY (id)
 );
+
+CREATE TABLE Users (
+	`id` INT NOT NULL AUTO_INCREMENT,
+	`firstname` VARCHAR(100), 
+	`lastname` VARCHAR(100), 
+    `email` VARCHAR(200) NOT NULL,
+    `password` varchar(100) NOT NULL,
+    `currentJob` VARCHAR (200),
+    `education` VARCHAR (200),
+    `industry`	VARCHAR (200),
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE Plans (
+    `planID` INT NOT NULL AUTO_INCREMENT,
+    `userID` INT,
+    `position` VARCHAR(200),
+    `budget`    float ,
+    `numWeeks` INT,
+    `numHours` float,
+    `MOOC1` INT,
+    `MOOC2` INT, 
+    `MOOC3` INT,
+    `MOOC4` INT,
+    `Courses` json,
+    FOREIGN KEY (userID) REFERENCES Users(id),
+    PRIMARY KEY (planID)
+);
