@@ -12,7 +12,7 @@ import requests
 import time
 import pickle
 import os
-from data_classes import Course,Instructor
+from data_classes import Course,Instructor,Error
 from pyvirtualdisplay import Display
 
 display = Display(visible=0,size=(800,600))
@@ -22,7 +22,7 @@ def loadJSPage(url):
 	browser = webdriver.Chrome(os.path.dirname(os.path.abspath(__file__)) + '/chromedriver')#,chrome_options=options)
 	browser.get(url)
 	#replace with wait until specific element ID is loaded
-	time.sleep(20)
+	time.sleep(5)
 	soup = BeautifulSoup(browser.page_source, "html.parser")
 	browser.close()
 	return soup
@@ -73,7 +73,17 @@ def scrapeCourses():
 		instructor_html_table_class_code = '1eL5l'
 		instructor_html_table_row_code = '2Kwe1'
 
-		course_name = soup.select('h1.clp-lead__title')[0].text.strip()
+		try:
+			course_name = soup.select('h1.clp-lead__title')[0].text.strip()
+		except Exception as e:
+			error = Error(
+			url = link,
+			message = e,
+			course_providor_id = 1
+			)
+			error.save()
+			continue
+
 		course_price = soup.select("span.price-text__current")[0].text.strip()
 
 		x = soup.find('div',{'class':'rate-count'})
@@ -89,6 +99,8 @@ def scrapeCourses():
 				descriptionList.append(y.text)
 
 		course_description = ' '.join(descriptionList)
+
+		length = soup.select("span.curriculum-header-length")[0].text.strip()
 
 		#Instructor related fields
 		x = soup.find('div', {'class': 'instructor'})
@@ -119,11 +131,14 @@ def scrapeCourses():
 		price = course_price,
 		num_ratings = course_num_rating,
 		language = None,
-		length = None,
+		length = length,
 		inst_id = inst_id,
+		url = link,
 		course_providor_id = 1
 		)
 		course.save()
+
+	Display.stop()
 
 if __name__ == "__main__":
 	scrapeCourses()

@@ -19,7 +19,7 @@ cur.execute('SET CHARACTER SET utf8;')
 cur.execute('SET character_set_connection=utf8;')
 
 class Course(object):
-    def __init__(self, name, description, price, rating, num_ratings, language, length, inst_id, course_providor_id):
+    def __init__(self, name, description, price, rating, num_ratings, language, length, inst_id, url, course_providor_id):
         super(Course, self).__init__()
         self.name = name
         self.description = description
@@ -29,13 +29,14 @@ class Course(object):
         self.language = language
         self.length = length
         self.inst_id = inst_id
+        self.url = url
         self.course_providor_id = course_providor_id
 
     def save(self):
         if self.exists() == False:
             try:
-              cur.execute('''INSERT INTO Courses (name, description, price, rating, num_ratings, language, length, instructor_id, course_provider_id) 
-                  VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)''', (
+              cur.execute('''INSERT INTO Courses (name, description, price, rating, num_ratings, language, length, instructor_id, url, course_provider_id) 
+                  VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)''', (
                 self.name,
                 self.description,
                 self.price,
@@ -44,6 +45,7 @@ class Course(object):
                 self.language,
                 self.length,
                 self.inst_id,
+                self.url,
                 self.course_providor_id
               ))
               conn.commit()
@@ -94,6 +96,22 @@ class Instructor(object):
             return cur.fetchone()[0]
         except:
             return None
+
+class Error(object):
+    def __init__(self, url, message, course_providor_id):
+        super(Instructor, self).__init__()
+        self.url = url
+        self.message = message
+        self.course_providor_id = course_providor_id
+
+    def save(self):
+        cur.execute('''INSERT INTO Scraper_logs (course_providor_id, error_message, url) 
+          VALUES (%s, %s, %s)''', (
+        self.url,
+        self.message,
+        self.course_providor_id
+        ))
+        conn.commit()
 
 if __name__ == '__main__':
   pass

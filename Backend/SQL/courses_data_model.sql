@@ -26,7 +26,8 @@ CREATE TABLE Courses (
 	`language` VARCHAR(100),
 	`length` VARCHAR(100),
 	`instructor_id` INT NOT NULL,
-	`course_provider_id` INT NOT NULL, 
+	`course_provider_id` INT NOT NULL,
+	`url` VARCHAR(200), 
 	FOREIGN KEY (instructor_id) REFERENCES 	Course_instructors(id),
 	FOREIGN KEY (course_provider_id) REFERENCES Course_providors(id),
 	PRIMARY KEY (id)
@@ -58,4 +59,13 @@ CREATE TABLE Plans (
     `Courses` json,
     FOREIGN KEY (userID) REFERENCES Users(id),
     PRIMARY KEY (planID)
+);
+
+CREATE TABLE Scraper_logs (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `course_provider_id` INT NOT NULL,
+    `error_message` VARCHAR(400),
+    `url` VARCHAR(200),
+    FOREIGN KEY (course_provider_id) REFERENCES Course_providors(id),
+    PRIMARY KEY (id)
 );
