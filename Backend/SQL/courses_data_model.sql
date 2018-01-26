@@ -33,6 +33,22 @@ CREATE TABLE Courses (
 	PRIMARY KEY (id)
 );
 
+CREATE TABLE Skills (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `skill` VARCHAR(100) NOT NULL,
+    `description` VARCHAR(400),
+    `level` INT,
+    `comments` VARCHAR(200)
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE Course_skills (
+    `course_id` INT NOT NULL,
+    `skill_id` INT,
+    FOREIGN KEY (course_id) REFERENCES 	Courses(id),
+	FOREIGN KEY (skill_id) REFERENCES Skills(id)
+);
+
 CREATE TABLE Users (
 	`id` INT NOT NULL AUTO_INCREMENT,
 	`firstname` VARCHAR(100), 

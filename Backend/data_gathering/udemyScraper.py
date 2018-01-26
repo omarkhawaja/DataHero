@@ -75,6 +75,37 @@ def scrapeCourses():
 
 		try:
 			course_name = soup.select('h1.clp-lead__title')[0].text.strip()
+
+			course_price = soup.select("span.price-text__current")[0].text.strip()
+
+			x = soup.find('div',{'class':'rate-count'})
+			ratingCountString = x.find('span',{'class': 'tooltip-container tooltip--rate-count-container'}).contents[2].strip()
+
+			course_num_rating = ratingCountString
+			course_rating = x.get_text().strip()[:3]
+
+			descriptions = soup.find('div',{'class':'js-simple-collapse js-simple-collapse--description'}).find('div',{'class':'js-simple-collapse-inner'})
+			descriptions.find_all('p')
+			for y in descriptions:
+				if y.name == 'p':
+					descriptionList.append(y.text)
+
+			course_description = ' '.join(descriptionList)
+
+			length = soup.select("span.curriculum-header-length")[0].text.strip()
+
+			#Instructor related fields
+			x = soup.find('div', {'class': 'instructor'})
+			instructor_name = x.find('a').text.strip()
+
+			x = soup.find('div', {'class': 'instructor--instructor__stats--{}'.format(instructor_html_table_class_code)})
+			trs = x.find_all('tr')
+
+			instructor_rating = float(trs[0].find_all('span', {'class': 'instructor--instructor__stat-value--{}'.format(instructor_html_table_row_code)})[0].text.strip().replace(" ",""))
+			instructor_num_reviews = int(trs[1].find_all('span', {'class': 'instructor--instructor__stat-value--{}'.format(instructor_html_table_row_code)})[0].text.strip().replace(",","").replace(" ",""))
+			instructor_num_students = int(trs[2].find_all('span', {'class': 'instructor--instructor__stat-value--{}'.format(instructor_html_table_row_code)})[0].text.strip().replace(",","").replace(" ",""))
+			instructor_num_courses = int(trs[3].find_all('span', {'class': 'instructor--instructor__stat-value--{}'.format(instructor_html_table_row_code)})[0].text.strip().replace(" ",""))
+		
 		except Exception as e:
 			error = Error(
 			url = link,
@@ -83,36 +114,6 @@ def scrapeCourses():
 			)
 			error.save()
 			continue
-
-		course_price = soup.select("span.price-text__current")[0].text.strip()
-
-		x = soup.find('div',{'class':'rate-count'})
-		ratingCountString = x.find('span',{'class': 'tooltip-container tooltip--rate-count-container'}).contents[2].strip()
-
-		course_num_rating = ratingCountString
-		course_rating = x.get_text().strip()[:3]
-
-		descriptions = soup.find('div',{'class':'js-simple-collapse js-simple-collapse--description'}).find('div',{'class':'js-simple-collapse-inner'})
-		descriptions.find_all('p')
-		for y in descriptions:
-			if y.name == 'p':
-				descriptionList.append(y.text)
-
-		course_description = ' '.join(descriptionList)
-
-		length = soup.select("span.curriculum-header-length")[0].text.strip()
-
-		#Instructor related fields
-		x = soup.find('div', {'class': 'instructor'})
-		instructor_name = x.find('a').text.strip()
-
-		x = soup.find('div', {'class': 'instructor--instructor__stats--{}'.format(instructor_html_table_class_code)})
-		trs = x.find_all('tr')
-
-		instructor_rating = float(trs[0].find_all('span', {'class': 'instructor--instructor__stat-value--{}'.format(instructor_html_table_row_code)})[0].text.strip().replace(" ",""))
-		instructor_num_reviews = int(trs[1].find_all('span', {'class': 'instructor--instructor__stat-value--{}'.format(instructor_html_table_row_code)})[0].text.strip().replace(",","").replace(" ",""))
-		instructor_num_students = int(trs[2].find_all('span', {'class': 'instructor--instructor__stat-value--{}'.format(instructor_html_table_row_code)})[0].text.strip().replace(",","").replace(" ",""))
-		instructor_num_courses = int(trs[3].find_all('span', {'class': 'instructor--instructor__stat-value--{}'.format(instructor_html_table_row_code)})[0].text.strip().replace(" ",""))
 
 		instructor = Instructor(
 		name = instructor_name,
