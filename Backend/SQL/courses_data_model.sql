@@ -38,7 +38,7 @@ CREATE TABLE Skills (
     `skill` VARCHAR(100) NOT NULL,
     `description` VARCHAR(400),
     `level` INT,
-    `comments` VARCHAR(200)
+    `comments` VARCHAR(200),
     PRIMARY KEY (id)
 );
 
