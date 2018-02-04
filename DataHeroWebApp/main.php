@@ -1,55 +1,23 @@
 <?php 
-
-	session_start() ;
-    
     include ("login.php");
-	include ("connection.php") ;
-    
-    if (is_null($_SESSION['id'] ))
-    {
-        header ("Location:index.php") ;
-    }
-	
-/*	$query = "SELECT `x` FROM `users` WHERE `id` = '".$_SESSION['id']."' LIMIT 1" ;
-	
-	$result = mysqli_query($link,$query) ;
+	include ("connection.php");
+    include ("navBar.php");
 
-	$row = mysqli_fetch_array ($result) ;
-	
-	$diary = $row['diary'] ;*/
-
+    if (is_null($_SESSION['id'] )) header("Location:index.php") ;
 ?>
-
-
-
 	<!DOCTYPE html>
 	<html lang="en">
-
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 		<title>Data Hero</title>
-
-		<!-- Bootstrap -->
-		<link href="css/bootstrap.min.css" rel="stylesheet">
-
-		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-		<!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-    
+        
 		<style>
-
 			.navbar-brand {
 				font-size: 1.8em;
 				margin-right: 30px;
 			}
-			
-			
 			#topContainer {
 				background-image: url("background.jpg");
 				width: 100%;
@@ -93,32 +61,13 @@
 			}
 		</style>
 	</head>
+        
 	<body data-spy="scroll" data-target=".navbar-collapse">
-		<div class="navbar navbar-default navbar-fixed-top ">
-			<div class="container">
 
-				<div class="navbar-header pull-left">
-					<a href="" class="navbar-brand">Data Hero</a>
-				</div>
-                <div class = "pull-left">
-                    <ul class="navbar-nav nav ">
-                        <li><a href="main.php" >Dashboard</a></li>
-					</ul>
-                </div>
-
-				<div class=" pull-right">
-					<ul class="navbar-nav nav ">
-                        <li> <a href="manageProfile.php">My Profile</a></li>
-						<li> <a href="index.php?logout=1">Log Out</a></li>
-					</ul>
-				</div>
-			</div>
-        </div>        
         <div class="container contentContainer" id="topContainer">
-
             <div class="row">
 				<div class="col-md-6 col-md-offset-1" id="topRow">
-                        <h1> Welcome to your dashboard<?php  {echo(", ABC".$fname);}?>!</h1>
+                        <h1> Welcome to your dashboard<?php if($_SESSION['fname']) echo(', '.$_SESSION['fname'].'!'); else echo("!");?></h1>
 				</div>
             </div>
             
@@ -139,26 +88,50 @@
                           <th scope="col"></th>
                           <th scope="col"></th>
                         </tr>
-                      </thead>
-                      <tbody> 
-<!-- table body to be printed via php script: for loop with Table rows-->
+                    </thead>
+<!-- table body to be printed via php script: loop with table rows-->
+                    <tbody>
+        <?php
+            $query = "SELECT * FROM Plans WHERE `user_id` = '".$_SESSION['id']."'" ;
+            $result = mysqli_query($link,$query) ;	
+            if (mysqli_num_rows($result) > 0) 
+            {
+                while($row = mysqli_fetch_assoc($result))
+                {
+                    ?>
                         <tr>
-                          <th scope="row">Data Scientist</th>
-                          <td>12/12/2018</td>
-                           <td><a type="button" class="btn btn-success" href = "">View Plan</a></td>
-                          <td><a type="button" class="btn btn-danger"  href = "">Delete</a></td>
+                            <th scope="row"><?php echo($row['position']);?></th>
+                            <td>12/12/2018</td>
+                            <td> 
+                              <form action = "viewPlan.php?<?php echo($row['id']);?>" method="post">
+                                <input type="hidden" name="ViewID" value="<?php echo $row['id']; ?>">
+                                <input type ="submit" class = "btn btn-success" value = "View Plan">
+                              </form>
+                            </td>
+                            <td> 
+                              <form action = "deletePlan.php?<?php echo($row['id']);?>" method="post">
+                                <input type="hidden" name="DeleteID" value="<?php echo $row['id']; ?>">
+                                <input type ="submit" class = "btn btn-danger" value = "Delete">
+                              </form>
+                            </td> 
                         </tr>
-            
-                        <tr>
-                          <th scope="row">Data Engineer</th>
-                          <td>01/01/1992</td>
-                          <td><a type="button" class="btn btn-success" href = "">View Plan</a></td>
-                          <td><a type="button" class="btn btn-danger"  href = "">Delete</a></td>
-                        </tr>
+                    <?php
+                }
+            }
+            else
+            {
+                ?>
+                    <tr>
+                        <th scope="row">You don't have any plans!</th>
+                    </tr>  
+                <?php
+            }
+        ?> 
                       </tbody>
                     </table>
                 </div> 
 			</div>
+
             <div class = "row">
                 <div class="col-md-6 col-md-offset-2 " id="FourthRow">
                 <a class="btn btn-primary btn-lg" href="GeneratePlan.php" role="button">Create a New Plan</a>
@@ -166,13 +139,5 @@
             </div>
             
         </div>
-
-			<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-			<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-			<!-- Include all compiled plugins (below), or include individual files as needed -->
-			<script src="js/bootstrap.min.js"></script>
-
-
 	</body>
-
 	</html>

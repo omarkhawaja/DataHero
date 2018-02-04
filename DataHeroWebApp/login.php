@@ -62,39 +62,37 @@
 				mysqli_query($link,$query) ;
 				
 				$success = "You have been signed up!" ;
-				
 				$_SESSION['id'] = mysqli_insert_id($link) ;
-                
-                
 				
 				header ("Location:main.php") ;	
 			}				
         }  
     }
-	
 	if($_POST['submit2']=="Log In")
 	{
-		
 			$query = "SELECT * FROM Users WHERE email = '".$_POST['loginemail']."' AND password ='".md5(md5($_POST['loginemail']).$_POST['loginpassword'])."' LIMIT 1";
-		
-		
+        
 			$result = mysqli_query($link,$query) ;
 			$row = mysqli_fetch_array ($result) ;
-			
+        
 			if ($row) 
 			{
-				$_SESSION ['id'] = $row ['id'] ;
-				
+                $_SESSION['id'] = $row['id'] ;
+                
+                $query2 = "SELECT * FROM User_info WHERE id = '". $_SESSION['id']."'";
+                $result2 = mysqli_query($link,$query2) ;
+                $row2 = mysqli_fetch_array ($result2) ;
+                if($row2)
+                {
+                    //get info from User_info Table here:
+                    $_SESSION['fname'] = $row2['first_name'] ;
+                    $_SESSION['lname'] = $row2['last_name'] ;
+                }
 				header ("Location:main.php") ;
 			}
-			
 			else
 			{
 				$error =  "We could not find a user with that email and password. Please try again!<br/>New user? Please sign up below:" ;
 			}
-			
 	}
-
-	
-
 ?>
