@@ -93,7 +93,21 @@ CREATE TABLE Plan_courses (
 	FOREIGN KEY (course_id) REFERENCES Courses(id)
 );
 
-CREATE TABLE Scraper_logs(
+CREATE TABLE Positions (
+	`id` INT NOT NULL AUTO_INCREMENT,
+	`position` VARCHAR(100) NOT NULL, 
+	`description` TEXT, 
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE positions_skills (
+	`position_id` INT NOT NULL,
+	`skill_id` INT NOT NULL, 
+	FOREIGN KEY (position_id) REFERENCES Positions(id),
+	FOREIGN KEY (skill_id) REFERENCES Skills(id)
+   );
+
+CREATE TABLE Scraper_logs (
     `id` INT NOT NULL AUTO_INCREMENT,
     `course_provider_id` INT NOT NULL,
     `error_message` VARCHAR(400),
