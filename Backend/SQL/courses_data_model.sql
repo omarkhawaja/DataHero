@@ -100,7 +100,7 @@ CREATE TABLE Positions (
 	PRIMARY KEY (id)
 );
 
-CREATE TABLE positions_skills (
+CREATE TABLE Position_skills (
 	`position_id` INT NOT NULL,
 	`skill_id` INT NOT NULL, 
 	FOREIGN KEY (position_id) REFERENCES Positions(id),
