@@ -22,11 +22,13 @@
             font-size: 1.8em;
             margin-right: 30px;
         }
+
         #topRow {
             margin-top: 60px;
             margin-bottom: 60px;
             text-align: left;
         }
+
         .h1 {
             font-size: 200%;
         }
@@ -64,43 +66,48 @@
 
                     </div>
 
-<script>
-    //Write JS script to output relevant skills based on "jobTitle" selection:
-    function UpdateSkills() {
+                    <script>
+                        //Write JS script to output relevant skills based on "jobTitle" selection:
+                        function UpdateSkills() {
 
-        var SelectedJobTitle = document.getElementById("jobTitle").value;
-        if (SelectedJobTitle == "Data Analyst") {
-            document.getElementById.innerHTML = ""
+                            var SelectedJobTitle = document.getElementById("jobTitle").value;
+                            if (SelectedJobTitle == "Data Analyst") {
+                                document.getElementById.innerHTML = ""
 
-        } else if (SelectedJobTitle == "") {
-            document.getElementById.innerHTML = ""
-        } else if (SelectedJobTitle == "") {
-            document.getElementById.innerHTML = ""
+                            } else if (SelectedJobTitle == "") {
+                                document.getElementById.innerHTML = ""
+                            } else if (SelectedJobTitle == "") {
+                                document.getElementById.innerHTML = ""
 
-        } else if (SelectedJobTitle == "") {
-            document.getElementById.innerHTML = ""
-        }
-    }
-</script>
+                            } else if (SelectedJobTitle == "") {
+                                document.getElementById.innerHTML = ""
+                            }
+                        }
+                    </script>
 
                     <br/>
 
 
-                    <div class="form-group" id="skills">
-
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-                            <label class="form-check-label" for="inlineRadio1">DS Skill 1</label>
+                    <div class="form-group" id="DataScienceSkills">
+                        <div class="form-group" name="skill1">
+                            <label class="radio-inline">Machine Learning</label>
+                            <label class="radio-inline">
+                            <input type="radio" name="ML" value = "1">Beginner
+                            </label>
+                            <label class="radio-inline">
+                            <input disabled type="radio" name="ML" value = "2">Advanced
+                            </label>
                         </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                            <label class="form-check-label" for="inlineRadio2">DS Skill 1</label>
+                        <div class="form-group" name="skill2">
+                            <label class="radio-inline">Supervised Learning</label>
+                            <label class="radio-inline">
+                            <input type="radio" name="SL" value = "1">Beginner
+                            </label>
+                            <label class="radio-inline">
+                            <input disabled type="radio" name="SL" value = "2">Advanced
+                            </label>
                         </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3" disabled>
-                            <label class="form-check-label" for="inlineRadio3">DS Skill 1</label>
-                        </div>
-
+                        
                     </div>
 
                     <button type="submit" class="btn btn-primary btn-lg">Generate New Plan</button>
