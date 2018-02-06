@@ -13,6 +13,7 @@ CREATE TABLE Course_instructors (
 	`num_reviews` INT, 
 	`num_students` INT, 
 	`num_courses` INT,
+    `time_scraped` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY (id) 
 );
 
@@ -27,7 +28,8 @@ CREATE TABLE Courses (
 	`length` VARCHAR(100),
 	`instructor_id` INT NOT NULL,
 	`course_provider_id` INT NOT NULL,
-	`url` VARCHAR(200), 
+	`url` VARCHAR(200),
+    `time_scraped` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	FOREIGN KEY (instructor_id) REFERENCES 	Course_instructors(id),
 	FOREIGN KEY (course_provider_id) REFERENCES Course_providors(id),
 	PRIMARY KEY (id)
@@ -51,30 +53,44 @@ CREATE TABLE Course_skills (
 
 CREATE TABLE Users (
 	`id` INT NOT NULL AUTO_INCREMENT,
-	`firstname` VARCHAR(100), 
-	`lastname` VARCHAR(100), 
     `email` VARCHAR(200) NOT NULL,
     `password` varchar(100) NOT NULL,
-    `currentJob` VARCHAR (200),
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE User_info (
+	`id` INT NOT NULL,
+	`first_name` VARCHAR(100), 
+	`last_name` VARCHAR(100),
+	`current_occupation` VARCHAR (200),
+    `current_job_position` VARCHAR (200),
     `education` VARCHAR (200),
     `industry`	VARCHAR (200),
+    FOREIGN KEY (id) REFERENCES Users(id),
 	PRIMARY KEY (id)
 );
 
 CREATE TABLE Plans (
-    `planID` INT NOT NULL AUTO_INCREMENT,
-    `userID` INT,
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `user_id` INT,
     `position` VARCHAR(200),
     `budget`    float ,
-    `numWeeks` INT,
-    `numHours` float,
+    `weeks` INT,
+    `hours` float,
     `MOOC1` INT,
     `MOOC2` INT, 
     `MOOC3` INT,
     `MOOC4` INT,
-    `Courses` json,
-    FOREIGN KEY (userID) REFERENCES Users(id),
-    PRIMARY KEY (planID)
+    `time_stamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES Users(id),
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE Plan_courses (
+    `plan_id` INT NOT NULL,
+    `course_id` INT NOT NULL,
+    FOREIGN KEY (plan_id) REFERENCES 	Plans(id),
+	FOREIGN KEY (course_id) REFERENCES Courses(id)
 );
 
 CREATE TABLE Positions (
@@ -96,6 +112,14 @@ CREATE TABLE Scraper_logs (
     `course_provider_id` INT NOT NULL,
     `error_message` VARCHAR(400),
     `url` VARCHAR(200),
+    `time_stamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (course_provider_id) REFERENCES Course_providors(id),
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE Keywords(
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `skill` VARCHAR(100),
+    `edit_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id)
 );

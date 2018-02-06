@@ -14,9 +14,10 @@ import pickle
 import os
 from data_classes import Course,Instructor,Error
 from pyvirtualdisplay import Display
+import argparse
 
-display = Display(visible=0,size=(800,600))
-display.start()
+#display = Display(visible=0,size=(800,600))
+#display.start()
 
 def loadJSPage(url):
 	browser = webdriver.Chrome(os.path.dirname(os.path.abspath(__file__)) + '/chromedriver')#,chrome_options=options)
@@ -55,17 +56,23 @@ def readCourses(fileName):
 
 	return data
 
-def saveCourses(data,fileName):
-	with open(fileName, 'wb') as f:
-		pickle.dump(data, f,protocol=pickle.HIGHEST_PROTOCOL)
+def scrapeCourses(mode='init'):
 
-def scrapeCourses():
-	courseLinks = getCourses("coursesUdemy.txt")
-	#courseLinks = readCourses("coursesUdemy.txt")
+	if mode == 'init':
+		courseLinks = getCourses("coursesUdemy.txt")
+	elif mode == 'read':
+		courseLinks = readCourses("coursesUdemy.txt")
+	elif mode == 'redo':
+		errs = Error()
+		courseLinks = errs.rescape()
 
 	#now we are at the course page	
 	for link in courseLinks:
-		soup = loadJSPage(link)
+		print(link[0])
+		if mode == 'redo':
+			soup = loadJSPage(link[0])
+		else:
+			soup = loadJSPage(link)
 		descriptionList = []
 
 		#Codes for the html table containing instructor info, and the row codes
@@ -139,7 +146,13 @@ def scrapeCourses():
 		)
 		course.save()
 
-	Display.stop()
+	#display.stop()
 
 if __name__ == "__main__":
-	scrapeCourses()
+
+	#parsing command line input
+	parser = argparse.ArgumentParser(description="Udemy data related course scraper.")
+	parser.add_argument("-mode",help="init,read, or redo")
+	args = parser.parse_args()
+
+	scrapeCourses(args.mode)
