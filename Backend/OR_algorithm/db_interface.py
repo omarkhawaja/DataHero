@@ -54,7 +54,8 @@ class OR_inputs(object):
                    (select x.id,s.id as 'skill' from Courses x cross join (select id from Skills order by id asc)s)x
                    left outer join
                    (select course_id,skill_id from Course_skills order by course_id,skill_id asc)y
-                   on x.id = y.course_id and x.skill = y.skill_id;''')
+                   on x.id = y.course_id and x.skill = y.skill_id
+                   order by x.id,x.skill asc;''')
     
     data_skills = cur.fetchall()
     all_skills = [x[1] for x in data_skills]
@@ -64,6 +65,7 @@ class OR_inputs(object):
     num_skills = num_skills_data[0][0]
 
     index = num_skills*int(len(courses))
+
     matrix = [list(all_skills[x:x+num_skills]) for x in range(0,index,num_skills)]
 
     return matrix
@@ -87,4 +89,6 @@ if __name__ == '__main__':
   test = OR_inputs(1)
   courses,ratings,prices = test.fetch_courses()
   matrix = test.fetch_courseSkill_matrix()
-  print(matrix)
+  cleaned_prices_1 = [float(s.split("$",1)[1]) if '$' in s else 14.99 for s in prices]
+  cleaned_ratings = [1000 if x == 0.0 else x for x in ratings]
+
