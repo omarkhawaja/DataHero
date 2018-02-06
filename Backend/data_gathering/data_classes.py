@@ -98,20 +98,24 @@ class Instructor(object):
             return None
 
 class Error(object):
-    def __init__(self, url, message, course_providor_id):
-        super(Instructor, self).__init__()
+    def __init__(self, url=None, message=None, course_providor_id=None):
+        super(Error, self).__init__()
         self.url = url
         self.message = message
         self.course_providor_id = course_providor_id
 
     def save(self):
-        cur.execute('''INSERT INTO Scraper_logs (course_providor_id, error_message, url) 
+        cur.execute('''INSERT INTO Scraper_logs (url, error_message, course_provider_id) 
           VALUES (%s, %s, %s)''', (
         self.url,
         self.message,
         self.course_providor_id
         ))
         conn.commit()
+
+    def rescape(self,date=None):
+        cur.execute('''SELECT url FROM Scraper_logs WHERE id > 354;''')
+        return cur.fetchall()
 
 if __name__ == '__main__':
   pass
