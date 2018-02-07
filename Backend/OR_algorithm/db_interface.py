@@ -1,5 +1,4 @@
 import MySQLdb
-import pickle
 
 config = {
 'user': 'root',
@@ -40,8 +39,11 @@ class OR_inputs(object):
         courses = [x[0] for x in data]
         ratings = [x[1] for x in data]
         prices = [x[2] for x in data]
-    
-        return courses,ratings,prices
+        
+        cleaned_prices = [float(s.split("$",1)[1]) if '$' in s else 14.99 for s in prices]
+        cleaned_ratings = [1000 if x == 0.0 else x for x in ratings]
+        
+        return courses,cleaned_ratings,cleaned_prices
       
       except Exception as e:
         print(e)
@@ -64,6 +66,7 @@ class OR_inputs(object):
     num_skills_data = cur.fetchall()
     num_skills = num_skills_data[0][0]
 
+    print(len(all_skills))
     index = num_skills*int(len(courses))
 
     matrix = [list(all_skills[x:x+num_skills]) for x in range(0,index,num_skills)]
@@ -86,9 +89,8 @@ class OR_inputs(object):
     pass
 
 if __name__ == '__main__':
+  #Example usage
   test = OR_inputs(1)
   courses,ratings,prices = test.fetch_courses()
   matrix = test.fetch_courseSkill_matrix()
-  cleaned_prices_1 = [float(s.split("$",1)[1]) if '$' in s else 14.99 for s in prices]
-  cleaned_ratings = [1000 if x == 0.0 else x for x in ratings]
 
