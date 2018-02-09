@@ -32,6 +32,11 @@
         .h1 {
             font-size: 200%;
         }
+
+        table.borderless td,
+        table.borderless th {
+            border: none !important;
+        }
     </style>
 </head>
 
@@ -40,30 +45,33 @@
     <div class="container contentContainer" id="topContainer">
         <div class="row">
             <div class="col-md-6 col-md-offset-1" id="topRow">
-                <h2> Generate a new plan:</h2>
+                <h2>Generate a new plan:</h2>
             </div>
         </div>
 
 
         <div class="row">
-            <div class="col-md-6 col-md-offset-2" id="ThirdRow">
+            <div class="col-md-6 col-md-offset-2" id="secondRow">
 
                 <form>
                     <div class="form-group">
-                        <label for="jobTitle">Select Job Title:</label>
+                        <label for="jobTitle"><h3>Select Job Title:</h3></label>
 
                         <select class="form-control" id="jobTitle" onchange="UpdateSkills()">
-                        <option selected>----</option>
-                        <option>Data Analyst</option>
-                        <option>Data Engineer</option>            
-                        <option>Data Scientist</option>                          
-                        <option>Business Intelligence Analyst</option>
-                        <option>Biostatistician</option>
+                            <option selected>----</option>
+                            
+                            <?php    
+                            $query = "SELECT `position` FROM Positions" ;
+                            $result = mysqli_query($link,$query) ;	
+                            if (mysqli_num_rows($result) > 0) 
+                            {
+                                while($positions = mysqli_fetch_assoc($result))
+                                {
+                                    echo("<option>".$positions['position']."</option>");
+                                }
+                            }
+                            ?>
                         </select>
-                    </div>
-
-                    <div class="form-group" id="SkillsDiv">
-
                     </div>
 
                     <script>
@@ -87,30 +95,93 @@
 
                     <br/>
 
+                    <!-- table body to be printed via php script: loop with table rows-->
+                    <?php    
+                    $query = "SELECT * FROM Positions" ;
+                    $result = mysqli_query($link,$query) ;	
+                    if (mysqli_num_rows($result) > 0) 
+                    {   
+                        while($positions = mysqli_fetch_assoc($result))
+                        {
+                    ?>
+                    <div class="form-group">
+                        <table class="table" id="<?php echo($positions['position']);?>Skills">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Skill</th>
+                                    <th scope="col">Current Level</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    <?php
+                    $query2 = "SELECT * FROM `Skills` WHERE `id` IS NOT NULL AND `id` IN 
+                    (SELECT `skill_id` FROM `Position_skills` WHERE `position_id` = ".$positions['id'].");";
+                    $result2 = mysqli_query($link,$query2) ;
+                    if (mysqli_num_rows($result2) > 0) 
+                    {
+                        while($skills = mysqli_fetch_assoc($result2))
+                        {
+                            ?>
+                                    <tr>
+                                        <div class="form-group" name="<?php echo($skills['skill']);?>">
+                                            <td>
+                                                <label class="radio-inline"><?php echo(ucwords($skills['skill']));?></label>
+                                            </td>
+                                            <td>
+                                                <label class="radio-inline">
+                        <input type="radio" name="<?php echo($skills['id']);?>" value = "1">no
+                        </label>
 
-                    <div class="form-group" id="DataScienceSkills">
-                        <div class="form-group" name="skill1">
-                            <label class="radio-inline">Machine Learning</label>
-                            <label class="radio-inline">
-                            <input type="radio" name="ML" value = "1">Beginner
-                            </label>
-                            <label class="radio-inline">
-                            <input disabled type="radio" name="ML" value = "2">Advanced
-                            </label>
-                        </div>
-                        <div class="form-group" name="skill2">
-                            <label class="radio-inline">Supervised Learning</label>
-                            <label class="radio-inline">
-                            <input type="radio" name="SL" value = "1">Beginner
-                            </label>
-                            <label class="radio-inline">
-                            <input disabled type="radio" name="SL" value = "2">Advanced
-                            </label>
-                        </div>
-                        
+                                                <label class="radio-inline">
+                        <input  type="radio" name="<?php echo($skills['id']);?>" value = "2">Beginner
+                        </label>
+
+                                                <label class="radio-inline">
+                        <input disabled type="radio" name="<?php echo($skills['id']);?>" value = "3">Advanced
+                        </label>
+                                            </td>
+                                        </div>
+                                    </tr>
+
+                    <?php
+                        }
+                    }
+                    ?>
+                            </tbody>
+                        </table>
+                        <hr>
                     </div>
+                    <?php
+                        }
+                    }
+                    ?>
+                        <!-- table body to be printed via php script: loop with table rows-->
 
-                    <button type="submit" class="btn btn-primary btn-lg">Generate New Plan</button>
+                        <div class="form-group">
+                            <label class="large" for="budget"><h3>Plan Budget</h3></label>
+                            <input type="number" class="form-control" id="budget">
+                            <p>Plan budget description goes here! </p>
+                            <hr>
+                        </div>
+
+                        <div class="form-group">
+                            <h3>Time Allocation</h3>
+                            <label class="large" for="budget"><h4>Desired number of weeks to finish plan:</h4></label>
+                            <input type="number" class="form-control" id="budget">
+                            <p>Time Allocation description1 goes here </p>
+                            <label class="large" for="budget"><h4>Hours available per week to work on plan:</h4></label>
+                            <input type="number" class="form-control" id="budget">
+                            <p>Time Allocation description2 goes here </p>
+                            <hr>
+                        </div>
+                        <div class="from-group">
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-lg">Generate New Plan</button>
+                        </div>
                 </form>
 
             </div>
