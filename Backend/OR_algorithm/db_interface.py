@@ -24,29 +24,29 @@ class OR_inputs(object):
   courseSkill_matrix = []
 
   def __init__(self, provider,rating=None):
-      super(OR_inputs, self).__init__()
-      self.provider = provider
-      self.rating = rating
+    super(OR_inputs, self).__init__()
+    self.provider = provider
+    self.rating = rating
 
   def fetch_courses(self):
-      try:
-        if self.rating == None:
-          cur.execute('''SELECT id,rating,price FROM Courses WHERE course_provider_id = {};'''.format(self.provider))
-        else:
-          cur.execute('''SELECT id,rating,price FROM Courses WHERE course_provider_id = {} AND rating >= {};'''.format(self.provider,self.rating))
-        
-        data = cur.fetchall()
-        courses = [x[0] for x in data]
-        ratings = [x[1] for x in data]
-        prices = [x[2] for x in data]
-        
-        cleaned_prices = [float(s.split("$",1)[1]) if '$' in s else 14.99 for s in prices]
-        cleaned_ratings = [1000 if x == 0.0 else x for x in ratings]
-        
-        return courses,cleaned_ratings,cleaned_prices
+    try:
+      if self.rating == None:
+        cur.execute('''SELECT id,rating,price FROM Courses WHERE course_provider_id = {};'''.format(self.provider))
+      else:
+        cur.execute('''SELECT id,rating,price FROM Courses WHERE course_provider_id = {} AND rating >= {};'''.format(self.provider,self.rating))
       
-      except Exception as e:
-        print(e)
+      data = cur.fetchall()
+      courses = [x[0] for x in data]
+      ratings = [x[1] for x in data]
+      prices = [x[2] for x in data]
+      
+      cleaned_prices = [float(s.split("$",1)[1]) if '$' in s else 14.99 for s in prices]
+      cleaned_ratings = [1000 if x == 0.0 else x for x in ratings]
+      
+      return courses,cleaned_ratings,cleaned_prices
+    
+    except Exception as e:
+      print(e)
 
   def fetch_courseSkill_matrix(self):
     
@@ -73,24 +73,30 @@ class OR_inputs(object):
 
     return matrix
 
-  def fetch_skills(self):
-    try:
-      cur.execute('''SELECT skill_id FROM Course_skills WHERE course_id in ({});'''.format(",".join(map(str, courses))))
-      
-      data = cur.fetchall()
-      skills = [x[0] for x in data]
-
-      return skills
-
-    except Exception as e:
-      print(e)
-
   def fetch_needed_skills(self,cur_skills):
     pass
 
+class OR_outputs(object):
+
+  def __init__(self, courses):
+    super(OR_outputs, self).__init__()
+    #input is coming in this format --> ['382','415'] need to add +1
+    self.courses = [str(int(x) + 1) for x in courses]
+
+  def fetch_course_details(self):
+    cur.execute("""select x.id,x.name,x.price,x.rating,x.description,x.length,x.url,y.name as 'inst_name',y.rating as 'inst_rating'
+                   from Courses x inner join Course_instructors y on x.instructor_id = y.id
+                   where x.id in ({}) """.format(",".join(self.courses)))
+    all_details = cur.fetchall()
+    return all_details
+    
 if __name__ == '__main__':
-  #Example usage
+  #Example usage for OR_inputs
   test = OR_inputs(1)
   courses,ratings,prices = test.fetch_courses()
   matrix = test.fetch_courseSkill_matrix()
 
+  #Example usage for OR_outputs
+  courses_output = OR_outputs(['43','34','234'])
+  test = courses_output.fetch_course_details()
+  print(test[1][1])

@@ -14,13 +14,15 @@ def missingSkills(skillsMapping,skills,neededSkills):
 
 def main(courses,courseSkills,cost,ratings):
     try:
-        neededSkills = [0 for x in range(186)]
+        #temporary manual selection of skills needed
+        neededSkills = [0 for x in range(len(courseSkills[0]))]
         #neededSkills[0] = 1
         neededSkills[23] = 1
         neededSkills[109] = 1
         neededSkills[35] = 1
         neededSkills[26] = 1
         #neededSkills[4] = 1
+
         # Create a new model
         m = Model()
 
@@ -33,8 +35,6 @@ def main(courses,courseSkills,cost,ratings):
         x = {} # binary variables for courses. X(i) = 1 if Course i is selected. 0 OW
         for i in range(numCourses):
             x[i] = m.addVar(vtype=GRB.BINARY, name="x%d" % i)
-            #print(x[i])
-            #test["x%d" % i] = i
 
         m.update()
 
@@ -51,24 +51,12 @@ def main(courses,courseSkills,cost,ratings):
 
         # Run Model
         m.optimize()
-
-        # OUTPUT
         
-
+        #Output
         for v in m.getVars():
             if v.x > 0:
-                name = v.varName
-                #courseDescription = df.loc[df['course_name'] == str(name)]['description'].values[0]
-                #courseInstructor = df.loc[df['course_name'] == str(name)]['instructor_name'].values[0]
-                #coursePrice = df.loc[df['course_name'] == str(name)]['price'].values[0]
-                #courseRating = df.loc[df['course_name'] == str(name)]['rating'].values[0]
-                print("Course name: {}".format(name))
-                #print("Course description: {}".format(courseDescription))
-                #print("Course instructor: {}".format(courseInstructor))
-                #print("Course price: {}".format(coursePrice))
-                #print("Course rating: {}".format(courseRating))
-                print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-                #print('%s %g' % (v.varName, v.x))
+                courses.append(v.varName.split("x",1)[1]) #x386
+
         print('Obj: %g' % m.objVal)
 
     except GurobiError as e:
@@ -83,8 +71,6 @@ if __name__ == "__main__":
     test = OR_inputs(1)
     courses,ratings,prices = test.fetch_courses()
     matrix = test.fetch_courseSkill_matrix(len(courses))
-    cleaned_prices = [float(s.split("$",1)[1]) if '$' in s else 14.99 for s in prices]
-    cleaned_ratings = [1000 if x == 0.0 else x for x in ratings]
-    main(courses,matrix,cleaned_prices,cleaned_ratings)
+    main(courses,matrix,prices,ratings)
 
     
