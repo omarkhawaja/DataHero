@@ -71,7 +71,7 @@ class Create_plan(Resource):
         inputs = OR_inputs(1)
         courses,ratings,prices = inputs.fetch_courses()
         matrix = inputs.fetch_courseSkill_matrix(len(courses))
-        ourses_recomended = main(courses,matrix,prices,ratings,skills_needed)
+        courses_recomended = main(courses,matrix,prices,ratings,skills_needed)
         outputs = OR_outputs(courses_recomended)
         #outputs = OR_outputs([33])
         course_details,fields = outputs.fetch_course_details()
