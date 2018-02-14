@@ -88,7 +88,8 @@ class OR_outputs(object):
                    from Courses x inner join Course_instructors y on x.instructor_id = y.id
                    where x.id in ({}) """.format(",".join(self.courses)))
     all_details = cur.fetchall()
-    return all_details
+    fields = cur.description
+    return all_details,fields
     
 if __name__ == '__main__':
   #Example usage for OR_inputs

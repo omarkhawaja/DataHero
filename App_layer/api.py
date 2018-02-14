@@ -25,7 +25,7 @@ class Courses(Resource):
         cur = conn.cursor()
         conn.set_character_set('utf8')
 
-        cur.execute("select * from Courses;") # This line performs query and returns json result
+        cur.execute("select * from Courses;")
         result = cur.fetchall()
         fields = [i[0] for i in cur.description if i[0] != 'time_scraped']
         for i in result:
@@ -70,9 +70,23 @@ class Create_plan(Resource):
         matrix = inputs.fetch_courseSkill_matrix(len(courses))
         courses_recomended = main(courses,matrix,prices,ratings,skills_needed)
         outputs = OR_outputs(courses_recomended)
-        return outputs
-        
+        outputs = OR_outputs([43,25,32])
+        course_details,fields = outputs.fetch_course_details()
 
+        course = {}
+        courses_json = []
+
+        fields = [i[0] for i in fields if i[0] != 'time_scraped' and i[0] != 'rating']
+        for i in course_details:
+            y = 0
+            for field in fields:
+                course[field] = i[y]
+                y = y + 1
+            courses_json.append(course)
+            course = {}
+
+        return courses_json
+        
 api.add_resource(Courses, '/courses')
 api.add_resource(Create_plan, '/create_plan/<skills_needed>')
 

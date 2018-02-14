@@ -56,3 +56,4 @@ def main(courses,courseSkills,cost,ratings,skills_needed):
 
 
 if __name__ == "__main__":
+    pass
