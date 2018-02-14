@@ -70,7 +70,6 @@ class Create_plan(Resource):
         matrix = inputs.fetch_courseSkill_matrix(len(courses))
         courses_recomended = main(courses,matrix,prices,ratings,skills_needed)
         outputs = OR_outputs(courses_recomended)
-        outputs = OR_outputs([43,25,32])
         course_details,fields = outputs.fetch_course_details()
 
         course = {}
