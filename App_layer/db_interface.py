@@ -48,7 +48,7 @@ class OR_inputs(object):
     except Exception as e:
       print(e)
 
-  def fetch_courseSkill_matrix(self):
+  def fetch_courseSkill_matrix(self,num_courses):
     
     cur.execute('''select x.id,
                    case when y.skill_id is null then 0 else 1 end as skill_code 
@@ -67,7 +67,7 @@ class OR_inputs(object):
     num_skills = num_skills_data[0][0]
 
     print(len(all_skills))
-    index = num_skills*int(len(courses))
+    index = num_skills*num_courses
 
     matrix = [list(all_skills[x:x+num_skills]) for x in range(0,index,num_skills)]
 

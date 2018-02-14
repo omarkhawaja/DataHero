@@ -1,7 +1,6 @@
 from gurobipy import *
 import pickle
 import pandas as pd
-from db_interface import OR_inputs
 
 def missingSkills(skillsMapping,skills,neededSkills):
 	indxs = []
@@ -17,7 +16,7 @@ def main(courses,courseSkills,cost,ratings,skills_needed):
         #temporary manual selection of skills needed
         neededSkills = [0 for x in range(len(courseSkills[0]))]
         for skill in skills_needed:
-            neededSkills[skill] = 1
+            neededSkills[int(skill)] = 1
 
         # Create a new model
         m = Model()
@@ -33,29 +32,21 @@ def main(courses,courseSkills,cost,ratings,skills_needed):
             x[i] = m.addVar(vtype=GRB.BINARY, name="x%d" % i)
 
         m.update()
-
         # Set Objective Function
         m.setObjective(quicksum((x[i] * ratings[i]) for i in range(numCourses)), GRB.MINIMIZE)
-
         # Set Partitioning Constraints / Modified to only work with "neededSkills"
         for s in range(numSkills):
-            #print s
             m.addConstr(quicksum(x[i] * courseSkills[i][s] for i in range(numCourses)) >= neededSkills[s])
-
         # Budget Constraint
         m.addConstr(quicksum(cost[i]*x[i] for i in range(numCourses)) <= budget)
-
         # Run Model
         m.optimize()
         
         #Output
         for v in m.getVars():
             if v.x > 0:
-                courses.append(v.varName.split("x",1)[1]) #x386
-
-        print('Obj: %g' % m.objVal)
-
-        return m.objVal
+                courses_recomended.append(v.varName.split("x",1)[1]) #x386
+        return courses_recomended
 
     except GurobiError as e:
         print('Error code ' + str(e.errno) + ": " + str(e))
@@ -65,9 +56,3 @@ def main(courses,courseSkills,cost,ratings,skills_needed):
 
 
 if __name__ == "__main__":
-    test = OR_inputs(1)
-    courses,ratings,prices = test.fetch_courses()
-    matrix = test.fetch_courseSkill_matrix(len(courses))
-    main(courses,matrix,prices,ratings)
-
-    

@@ -1,9 +1,9 @@
-#!/usr/bin/python3
 from flask import Flask, request
 from flask_restful import Resource, Api
 import MySQLdb
 from PythonModel import main
-from db_interface import OR_inputs
+from db_interface import OR_inputs, OR_outputs
+from flask_cors import CORS 
 
 config = {
 'user': 'root',
@@ -14,8 +14,8 @@ config = {
 
 app = Flask(__name__)
 api = Api(app)
+CORS(app)
 
-#take user input run algorithm and return planw ith course details as JSON
 class Courses(Resource):
     def get(self):
         course = {}
@@ -65,12 +65,12 @@ class Courses(Resource):
 
 class Create_plan(Resource):
     def get(self,skills_needed):
-        test = OR_inputs(1)
-        courses,ratings,prices = test.fetch_courses()
-        matrix = test.fetch_courseSkill_matrix(len(courses))
-        test_algorithm = main(courses,matrix,prices,ratings,skills_needed)
-
-        return test_algorithm
+        inputs = OR_inputs(1)
+        courses,ratings,prices = inputs.fetch_courses()
+        matrix = inputs.fetch_courseSkill_matrix(len(courses))
+        courses_recomended = main(courses,matrix,prices,ratings,skills_needed)
+        outputs = OR_outputs(courses_recomended)
+        return outputs
         
 
 api.add_resource(Courses, '/courses')
