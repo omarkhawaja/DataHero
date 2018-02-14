@@ -4,6 +4,8 @@ import MySQLdb
 from PythonModel import main
 from db_interface import OR_inputs, OR_outputs
 from flask_cors import CORS 
+import json
+from decimal import Decimal as D
 
 config = {
 'user': 'root',
@@ -64,22 +66,27 @@ class Courses(Resource):
         return {'status':'success'}
 
 class Create_plan(Resource):
-    def get(self,skills_needed):
+    def get(self,skills_needed_string):
+        skills_needed = skills_needed_string.split(",")
         inputs = OR_inputs(1)
         courses,ratings,prices = inputs.fetch_courses()
         matrix = inputs.fetch_courseSkill_matrix(len(courses))
-        courses_recomended = main(courses,matrix,prices,ratings,skills_needed)
+        ourses_recomended = main(courses,matrix,prices,ratings,skills_needed)
         outputs = OR_outputs(courses_recomended)
+        #outputs = OR_outputs([33])
         course_details,fields = outputs.fetch_course_details()
 
         course = {}
         courses_json = []
 
-        fields = [i[0] for i in fields if i[0] != 'time_scraped' and i[0] != 'rating']
+        fields = [i[0] for i in fields if i[0] != 'time_scraped']
         for i in course_details:
             y = 0
             for field in fields:
-                course[field] = i[y]
+                if isinstance(i[y],D):
+                    course[field] = float(i[y])
+                else:
+                    course[field] = i[y]
                 y = y + 1
             courses_json.append(course)
             course = {}
@@ -87,7 +94,7 @@ class Create_plan(Resource):
         return courses_json
         
 api.add_resource(Courses, '/courses')
-api.add_resource(Create_plan, '/create_plan/<skills_needed>')
+api.add_resource(Create_plan, '/create_plan/<skills_needed_string>')
 
 if __name__ == '__main__':
      app.run()
