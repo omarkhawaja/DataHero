@@ -41,6 +41,8 @@ def main(courses,courseSkills,cost,ratings,skills_needed):
         m.addConstr(quicksum(cost[i]*x[i] for i in range(numCourses)) <= budget)
         # Run Model
         m.optimize()
+
+        courses_recomended = []
         
         #Output
         for v in m.getVars():
