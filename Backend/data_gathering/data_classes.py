@@ -114,7 +114,7 @@ class Error(object):
         conn.commit()
 
     def rescape(self,date=None):
-        cur.execute('''SELECT url FROM Scraper_logs WHERE id > 354;''')
+        cur.execute('''SELECT url FROM Scraper_logs WHERE id > 430;''')
         return cur.fetchall()
 
 if __name__ == '__main__':

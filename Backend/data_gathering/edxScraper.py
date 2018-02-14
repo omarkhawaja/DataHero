@@ -49,6 +49,9 @@ def get_courseLinks():
 	
 	return courseLinks
 
+def redo_scraping(courseLinks):
+	pass
+
 def get_course_details(courseLinks):
 	for course_link in courseLinks:
 		course_dict = {}
@@ -125,6 +128,9 @@ def get_course_details(courseLinks):
 
 if __name__ == '__main__':
 	#links = get_courseLinks()
-	links = readCourses("coursesEdx.txt")
+	#links = readCourses("coursesEdx.txt")
+	errs = Error()
+	links = errs.rescape()
+	#links = redo_scraping(links_original)
 	get_course_details(links)
 	#display.stop()
