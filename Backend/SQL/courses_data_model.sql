@@ -38,8 +38,7 @@ CREATE TABLE Courses (
 CREATE TABLE Skills (
     `id` INT NOT NULL AUTO_INCREMENT,
     `skill` VARCHAR(100) NOT NULL,
-    `description` VARCHAR(400),
-    `level` INT,
+    `type` VARCHAR(100),
     `comments` VARCHAR(200),
     PRIMARY KEY (id)
 );
@@ -47,6 +46,7 @@ CREATE TABLE Skills (
 CREATE TABLE Course_skills (
     `course_id` INT NOT NULL,
     `skill_id` INT,
+    `skill_lvl` INT,
     FOREIGN KEY (course_id) REFERENCES 	Courses(id),
 	FOREIGN KEY (skill_id) REFERENCES Skills(id)
 );
@@ -103,6 +103,7 @@ CREATE TABLE Positions (
 CREATE TABLE Position_skills (
 	`position_id` INT NOT NULL,
 	`skill_id` INT NOT NULL, 
+	`skill_lvl` INT,
 	FOREIGN KEY (position_id) REFERENCES Positions(id),
 	FOREIGN KEY (skill_id) REFERENCES Skills(id)
    );
@@ -120,6 +121,7 @@ CREATE TABLE Scraper_logs (
 CREATE TABLE Keywords(
     `id` INT NOT NULL AUTO_INCREMENT,
     `skill` VARCHAR(100),
+    `type` VARCHAR(100),
     `edit_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id)
 );

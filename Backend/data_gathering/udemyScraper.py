@@ -142,7 +142,8 @@ def scrapeCourses(mode='init'):
 		length = length,
 		inst_id = inst_id,
 		url = link,
-		course_providor_id = 1
+		course_providor_id = 1,
+		level = None
 		)
 		course.save()
 

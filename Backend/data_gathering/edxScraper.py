@@ -10,8 +10,8 @@ import time
 import re
 import os
 
-#display = Display(visible=0,size=(800,600))
-#display.start()
+display = Display(visible=0,size=(800,600))
+display.start()
 
 def readCourses(fileName):
 	data = {}
@@ -58,7 +58,7 @@ def get_course_details(courseLinks):
 		browser = webdriver.Chrome(os.path.dirname(os.path.abspath(__file__)) + '/chromedriver')
 		browser.get(course_link)
 		soup = BeautifulSoup(browser.page_source, "html.parser")
-		browser.close()
+		browser.quit()
 
 		try:
 			subject = soup.find('li',attrs={'data-field': 'subject'}).select('span.block-list__desc')[0].text.strip()
@@ -86,6 +86,9 @@ def get_course_details(courseLinks):
 				effort_1 = int(re.findall('\d+',effort)[0])
 				effort_2 = int(re.findall('\d+',effort)[1])
 				length = ((effort_1 + effort_2) / 2) * week_length
+
+				level_string = soup.find('li',attrs={'data-field': 'level'}).select('span.block-list__desc')[0].text.strip()
+				level = 0 if level_string == 'Introductory' else 1
 
 				#Instructor related fields
 				x = soup.find('li',attrs={'class': 'list-instructor__item'})
@@ -122,15 +125,13 @@ def get_course_details(courseLinks):
 		length = length,
 		inst_id = inst_id,
 		url = course_link,
-		course_providor_id = 3
+		course_providor_id = 3,
+		level = level
 		)
 		course.save()
 
 if __name__ == '__main__':
 	#links = get_courseLinks()
-	#links = readCourses("coursesEdx.txt")
-	errs = Error()
-	links = errs.rescape()
-	#links = redo_scraping(links_original)
+	links = readCourses("coursesEdx.txt")
 	get_course_details(links)
-	#display.stop()
+	display.stop()

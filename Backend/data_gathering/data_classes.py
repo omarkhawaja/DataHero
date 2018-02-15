@@ -19,7 +19,7 @@ cur.execute('SET CHARACTER SET utf8;')
 cur.execute('SET character_set_connection=utf8;')
 
 class Course(object):
-    def __init__(self, name, description, price, rating, num_ratings, language, length, inst_id, url, course_providor_id):
+    def __init__(self, name, description, price, rating, num_ratings, language, length, inst_id, url, course_providor_id, level):
         super(Course, self).__init__()
         self.name = name
         self.description = description
@@ -31,12 +31,13 @@ class Course(object):
         self.inst_id = inst_id
         self.url = url
         self.course_providor_id = course_providor_id
+        self.level = level
 
     def save(self):
         if self.exists() == False:
             try:
-              cur.execute('''INSERT INTO Courses (name, description, price, rating, num_ratings, language, length, instructor_id, url, course_provider_id) 
-                  VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)''', (
+              cur.execute('''INSERT INTO Courses (name, description, price, rating, num_ratings, language, length, instructor_id, url, course_provider_id, level) 
+                  VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)''', (
                 self.name,
                 self.description,
                 self.price,
@@ -46,7 +47,8 @@ class Course(object):
                 self.length,
                 self.inst_id,
                 self.url,
-                self.course_providor_id
+                self.course_providor_id,
+                self.level
               ))
               conn.commit()
             except e:

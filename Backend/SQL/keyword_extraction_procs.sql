@@ -15,7 +15,7 @@ DELIMITER ;
 
 DELIMITER $$
 DROP FUNCTION IF EXISTS check_skill$$
-CREATE FUNCTION check_skill(skill_name VARCHAR(100)) RETURNS INTEGER
+CREATE FUNCTION check_skill(skill_name VARCHAR(100), skill_type VARCHAR(100)) RETURNS INTEGER
 BEGIN
 	DECLARE skill_found INTEGER;
 	DECLARE skill_id INTEGER;
@@ -24,7 +24,7 @@ BEGIN
     IF skill_found = 1 THEN
 		SELECT id FROM Skills WHERE skill = skill_name into skill_id;
     ELSE
-		INSERT INTO Skills (skill) VALUES (skill_name);
+		INSERT INTO Skills (skill,`type`) VALUES (skill_name,skill_type);
 		SELECT LAST_INSERT_ID() into skill_id;
     END IF;
 
@@ -38,10 +38,11 @@ CREATE PROCEDURE keyword_extraction()
 BEGIN
 	DECLARE id_num INTEGER;
     DECLARE descrip TEXT;
+    DECLARE course_lvl INTEGER;
 	DECLARE exit_loop INTEGER DEFAULT 0; 
     
 	DECLARE courses_cursor CURSOR FOR
-	SELECT id,description FROM fydp.Courses;
+	SELECT id,description,`level` FROM fydp.Courses;
     
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET exit_loop = 1;
 	
@@ -49,13 +50,13 @@ BEGIN
     
 	get_courses: LOOP
     
-		FETCH  courses_cursor INTO id_num, descrip;
+		FETCH  courses_cursor INTO id_num, descrip,course_lvl;
     
 		IF exit_loop = 1 THEN
 		LEAVE get_courses;
 		END IF;
         
-        call keyword_extraction_inner_loop(descrip,id_num);
+        call keyword_extraction_inner_loop(descrip,id_num,course_lvl);
 
 	END LOOP get_courses;
     CLOSE courses_cursor;
@@ -65,16 +66,17 @@ DELIMITER ;
 
 DELIMITER $$
 DROP PROCEDURE IF EXISTS keyword_extraction_inner_loop$$
-CREATE PROCEDURE keyword_extraction_inner_loop(IN description TEXT, IN id_num INTEGER)
+CREATE PROCEDURE keyword_extraction_inner_loop(IN description TEXT, IN id_num INTEGER, IN course_lvl INTEGER)
 BEGIN
 
     DECLARE key_found VARCHAR(1);
 	DECLARE exit_loop INTEGER DEFAULT 0;
     DECLARE keyword_txt VARCHAR(100);
+    DECLARE keyword_type VARCHAR(100);
     DECLARE skill_id_num INTEGER;
     
 	DECLARE keyword_cursor CURSOR FOR
-	SELECT skill FROM fydp.Keywords;
+	SELECT skill,`type` FROM fydp.Keywords;
     
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET exit_loop = 1;
 	
@@ -82,7 +84,7 @@ BEGIN
     
 	get_keywords: LOOP
     
-		FETCH  keyword_cursor INTO keyword_txt;
+		FETCH  keyword_cursor INTO keyword_txt,keyword_type;
     
 		IF exit_loop = 1 THEN
 		LEAVE get_keywords;
@@ -90,8 +92,8 @@ BEGIN
         
 		select keyword_search(keyword_txt,description) from dual into key_found;
 		IF key_found = 'Y' THEN
-        select check_skill(keyword_txt) from dual into skill_id_num;
-		INSERT INTO Course_skills(course_id,skill_id) VALUES (id_num,skill_id_num);
+        select check_skill(keyword_txt,keyword_type) from dual into skill_id_num;
+		INSERT INTO Course_skills(course_id,skill_id,skill_lvl) VALUES (id_num,skill_id_num,course_lvl);
         COMMIT;
 		END IF;
 
