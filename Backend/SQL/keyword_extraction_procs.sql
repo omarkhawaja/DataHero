@@ -7,7 +7,7 @@ BEGIN
 	select CASE count(*) WHEN 0 THEN 'N' ELSE 'Y' END into keyword_found
 	from fydp.Keywords k
 	where k.skill = keyword
-	and   instr(lower(txt_to_search),lower(k.skill)) > 0;  
+	and   instr(lower(txt_to_search),lower(k.skill)) > 0; 
     
   RETURN keyword_found;
 END$$
@@ -101,4 +101,40 @@ BEGIN
 END$$
 DELIMITER ;
 
+DELIMITER $$
+DROP PROCEDURE IF EXISTS delete_dups$$
+CREATE PROCEDURE delete_dups()
+BEGIN
+	DECLARE course INTEGER;
+    DECLARE skill INTEGER;
+	DECLARE exit_loop INTEGER DEFAULT 0; 
+    
+	DECLARE dups_cursor CURSOR FOR
+	select course_id, skill_id  
+    from Course_skills
+	group by course_id, skill_id
+	having
+	(count(course_id) > 1) and (count(skill_id) > 1);
+    
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET exit_loop = 1;
+	
+	OPEN dups_cursor;
+    
+	get_dups: LOOP
+    
+		FETCH  dups_cursor INTO course, skill;
+    
+		IF exit_loop = 1 THEN
+		LEAVE get_dups;
+		END IF;
+        
+        delete from Course_skills where course_id = course and skill_id = skill limit 1;
+
+	END LOOP get_dups;
+    CLOSE dups_cursor;
+   
+END$$
+DELIMITER ;
+
 call fydp.keyword_extraction();
+call fydp.delete_dups();

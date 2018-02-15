@@ -1,7 +1,7 @@
 from flask import Flask, request
 from flask_restful import Resource, Api
 import MySQLdb
-from PythonModel import main
+from PythonModel import run_algorithm
 from db_interface import OR_inputs, OR_outputs
 from flask_cors import CORS 
 import json
@@ -71,9 +71,8 @@ class Create_plan(Resource):
         inputs = OR_inputs(1)
         courses,ratings,prices = inputs.fetch_courses()
         matrix = inputs.fetch_courseSkill_matrix(len(courses))
-        courses_recomended = main(courses,matrix,prices,ratings,skills_needed)
+        courses_recomended = run_algorithm(courses,matrix,prices,ratings,skills_needed)
         outputs = OR_outputs(courses_recomended)
-        #outputs = OR_outputs([33])
         course_details,fields = outputs.fetch_course_details()
 
         course = {}

@@ -11,7 +11,7 @@ def missingSkills(skillsMapping,skills,neededSkills):
 
 	return [1 if i in indxs else 0 for i, v in enumerate(skills)]
 
-def main(courses,courseSkills,cost,ratings,skills_needed):
+def run_algorithm(courses,courseSkills,cost,ratings,skills_needed):
     try:
         #temporary manual selection of skills needed
         neededSkills = [0 for x in range(len(courseSkills[0]))]
@@ -43,7 +43,7 @@ def main(courses,courseSkills,cost,ratings,skills_needed):
         m.optimize()
 
         courses_recomended = []
-        
+
         #Output
         for v in m.getVars():
             if v.x > 0:
