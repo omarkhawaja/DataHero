@@ -37,8 +37,14 @@ def run_algorithm(courses,courseSkills,cost,ratings,skills_needed):
         # Set Partitioning Constraints / Modified to only work with "neededSkills"
         for s in range(numSkills):
             m.addConstr(quicksum(x[i] * courseSkills[i][s] for i in range(numCourses)) >= neededSkills[s])
+        # Course Level Constraint:
+        for s in range(numSkills):
+            m.addConstr(quicksum(x[i] * courseLevel[i][s] for i in range(numCourses)) >= neededSkillLvls[s])
+
         # Budget Constraint
         m.addConstr(quicksum(cost[i]*x[i] for i in range(numCourses)) <= budget)
+        # Time Allocation Constraint:
+        m.addConstr(quicksum(lengths[i]*x[i] for i in range(numCourses))<= timeAllocation)
         # Run Model
         m.optimize()
 
