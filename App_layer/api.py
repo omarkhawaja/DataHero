@@ -5,7 +5,7 @@ from flask_cors import CORS
 import json
 from decimal import Decimal as D
 
-#from PythonModel import run_algorithm
+from PythonModel import run_algorithm
 from db_interface import OR_inputs, OR_outputs
 from utils import missing_skills, parse_request
 

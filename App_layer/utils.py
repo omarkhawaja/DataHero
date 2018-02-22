@@ -14,7 +14,7 @@ def parse_request(request_string):
 			position = i[1]
 		if i[0] == 'skills':
 			skills = i[1].split(',')
-		if i[0] == 'level':
+		if i[0] == 'levels':
 			skill_lvls = i[1].split(',')
 
 	return position,budget,timeAllocation,skills,skill_lvls 
