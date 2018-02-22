@@ -72,7 +72,7 @@ class Create_plan(Resource):
 
         #changed from skills_needed
         #0 doesn't have, 1 beginner/intermediate, 2 doesn't need
-        position,budget,timeAllocation,skills,skill_lvls = parse_request()
+        position,budget,timeAllocation,skills,skill_lvls = parse_request(skills_needed_string)
         #skills_needed,skillLvl_needed = missing_skills()
 
         inputs = OR_inputs(3)
