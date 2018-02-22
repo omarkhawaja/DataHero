@@ -106,7 +106,7 @@ class OR_outputs(object):
 	def __init__(self, courses):
 		super(OR_outputs, self).__init__()
 		#input is coming in this format --> ['382','415'] need to add +1
-		self.courses = [str(int(x) + 842) for x in courses]
+		self.courses = [str(int(x) + 843) for x in courses]
 
 	def fetch_course_details(self):
 		cur.execute("""select x.id,x.name,x.price,x.rating,x.description,x.length,x.url,y.name as 'inst_name',y.rating as 'inst_rating'
