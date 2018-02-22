@@ -1,11 +1,13 @@
 from flask import Flask, request
 from flask_restful import Resource, Api
 import MySQLdb
-from PythonModel import run_algorithm
-from db_interface import OR_inputs, OR_outputs
 from flask_cors import CORS 
 import json
 from decimal import Decimal as D
+
+#from PythonModel import run_algorithm
+from db_interface import OR_inputs, OR_outputs
+from utils import missing_skills, parse_request
 
 config = {
 'user': 'root',
@@ -18,7 +20,7 @@ app = Flask(__name__)
 api = Api(app)
 CORS(app)
 
-class Courses(Resource):
+class Position_skills(Resource):
     def get(self):
         course = {}
         courses = []
@@ -67,11 +69,18 @@ class Courses(Resource):
 
 class Create_plan(Resource):
     def get(self,skills_needed_string):
-        skills_needed = skills_needed_string.split(",")
-        inputs = OR_inputs(1)
-        courses,ratings,prices = inputs.fetch_courses()
-        matrix = inputs.fetch_courseSkill_matrix(len(courses))
-        courses_recomended = run_algorithm(courses,matrix,prices,ratings,skills_needed)
+
+        #changed from skills_needed
+        #0 doesn't have, 1 beginner/intermediate, 2 doesn't need
+        position,budget,timeAllocation,skills,skill_lvls = parse_request()
+        #skills_needed,skillLvl_needed = missing_skills()
+
+        inputs = OR_inputs(3)
+        courses,ratings,prices,lengths = inputs.fetch_courses()
+        courseSkill_matrix = inputs.fetch_courseSkill_matrix(len(courses))
+        courseSkillLvl_matrix = inputs.fetch_courseSkillLvls_matrix(len(courses))
+        #courses_recomended = run_algorithm(courses,courseSkill_matrix,courseSkillLvl_matrix,prices,ratings,lengths,timeAllocation,budget,skills_needed,skillLvl_needed)
+        courses_recomended = run_algorithm(courses,courseSkill_matrix,courseSkillLvl_matrix,prices,ratings,lengths,timeAllocation,budget)
         outputs = OR_outputs(courses_recomended)
         course_details,fields = outputs.fetch_course_details()
 
@@ -92,7 +101,7 @@ class Create_plan(Resource):
 
         return courses_json
         
-api.add_resource(Courses, '/courses')
+api.add_resource(Position_skills, '/position_skills/')
 api.add_resource(Create_plan, '/create_plan/<skills_needed_string>')
 
 if __name__ == '__main__':

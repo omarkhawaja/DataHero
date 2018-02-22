@@ -99,7 +99,7 @@ BEGIN
 
 	END LOOP get_keywords;
     CLOSE keyword_cursor;
-   
+
 END$$
 DELIMITER ;
 

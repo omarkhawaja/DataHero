@@ -2,26 +2,18 @@ from gurobipy import *
 import pickle
 import pandas as pd
 
-def missingSkills(skillsMapping,skills,neededSkills):
-	indxs = []
-	for skill in neededSkills:
-		for key,value in skillsMapping.items():
-			if value == skill:
-				indxs.append(key)
-
-	return [1 if i in indxs else 0 for i, v in enumerate(skills)]
-
-def run_algorithm(courses,courseSkills,cost,ratings,skills_needed):
+def run_algorithm(courses,courseSkills,courseLevel,cost,ratings,lengths,timeAllocation,budget):
     try:
         #temporary manual selection of skills needed
         neededSkills = [0 for x in range(len(courseSkills[0]))]
-        for skill in skills_needed:
-            neededSkills[int(skill)] = 1
+        neededSkills[19] = 1
+        neededSkills[25] = 1
+        
+        skillLvl_needed = [0 for x in range(len(courseSkills[0]))]
+        skillLvl_needed[25] = 1
 
         # Create a new model
         m = Model()
-
-        budget = 2000
 
         numSkills = len(courseSkills[0])
         numCourses = len(courses)
@@ -39,7 +31,7 @@ def run_algorithm(courses,courseSkills,cost,ratings,skills_needed):
             m.addConstr(quicksum(x[i] * courseSkills[i][s] for i in range(numCourses)) >= neededSkills[s])
         # Course Level Constraint:
         for s in range(numSkills):
-            m.addConstr(quicksum(x[i] * courseLevel[i][s] for i in range(numCourses)) >= neededSkillLvls[s])
+            m.addConstr(quicksum(x[i] * courseLevel[i][s] for i in range(numCourses)) >= skillLvl_needed[s])
 
         # Budget Constraint
         m.addConstr(quicksum(cost[i]*x[i] for i in range(numCourses)) <= budget)
