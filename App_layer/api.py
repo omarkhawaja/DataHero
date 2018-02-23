@@ -79,24 +79,26 @@ class Create_plan(Resource):
         courses,ratings,prices,lengths = inputs.fetch_courses()
         courseSkill_matrix = inputs.fetch_courseSkill_matrix(len(courses))
         courseSkillLvl_matrix = inputs.fetch_courseSkillLvls_matrix(len(courses))
-        courses_recomended = run_algorithm(courses,courseSkill_matrix,courseSkillLvl_matrix,prices,ratings,lengths,timeAllocation,budget)
-        outputs = OR_outputs(courses_recomended)
-        course_details,fields = outputs.fetch_course_details()
-
-        course = {}
+        
         courses_json = []
+        for i in range(2):
+            courses_recomended = run_algorithm(courses,courseSkill_matrix,courseSkillLvl_matrix,prices,ratings,lengths,timeAllocation,budget)
+            outputs = OR_outputs(courses_recomended)
+            course_details,fields = outputs.fetch_course_details()
 
-        fields = [i[0] for i in fields if i[0] != 'time_scraped']
-        for i in course_details:
-            y = 0
-            for field in fields:
-                if isinstance(i[y],D):
-                    course[field] = float(i[y])
-                else:
-                    course[field] = i[y]
-                y = y + 1
-            courses_json.append(course)
             course = {}
+
+            fields = [i[0] for i in fields if i[0] != 'time_scraped']
+            for i in course_details:
+                y = 0
+                for field in fields:
+                    if isinstance(i[y],D):
+                        course[field] = float(i[y])
+                    else:
+                        course[field] = i[y]
+                    y = y + 1
+                courses_json.append(course)
+                course = {}
 
         return courses_json
         
