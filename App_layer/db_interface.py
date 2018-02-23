@@ -38,7 +38,7 @@ class OR_inputs(object):
 			data = cur.fetchall()
 			courses = [x[0] for x in data]
 			ratings = [float(x[1]) for x in data]
-			prices = [float(x[2]) for x in data]
+			prices = [x[2] for x in data]
 			lengths = [float(x[3]) for x in data]
 
 			cleaned_prices = [float(s.split("$",1)[1].replace('USD','').strip()) if '$' in s else 0 for s in prices]
