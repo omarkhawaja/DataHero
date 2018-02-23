@@ -9,7 +9,7 @@ def parse_request(request_string):
 		if i[0] == 'budget':
 			budget = float(i[1])
 		if i[0] == 'length':
-			timeAllocation = i[1]
+			timeAllocation = float(i[1])
 		if i[0] == 'position':
 			position = int(i[1])
 		if i[0] == 'skills':
