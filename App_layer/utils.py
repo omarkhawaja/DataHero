@@ -20,4 +20,4 @@ def parse_request(request_string):
 	return position,budget,timeAllocation,skills,skill_lvls 
 
 if __name__ == '__main__':
-	parse_request("budget=5&length=4&position=1&skills=4,15,55&level=0,1,0")
+	print(parse_request("budget=5&length=4&position=1&skills=4,15,55&levels=0,1,0"))
