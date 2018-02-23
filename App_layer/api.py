@@ -110,8 +110,10 @@ class Create_plan(Resource):
             total_length['total_length'] = 340
             total_courses['course_count'] = 5
 
-            course_json.append()
-            courses_json.append(course_json,total_price,total_length,total_courses)
+            courses_json.append(course_json)
+            courses_json.append(total_price)
+            course_json.append(total_length)
+            course_json.append(total_courses)
             course_json = []
 
         return courses_json
