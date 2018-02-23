@@ -7,11 +7,11 @@ def parse_request(request_string):
 	parsed = parse_qsl(request_string)
 	for i in parsed:
 		if i[0] == 'budget':
-			budget = i[1]
+			budget = float(i[1])
 		if i[0] == 'length':
 			timeAllocation = i[1]
 		if i[0] == 'position':
-			position = i[1]
+			position = int(i[1])
 		if i[0] == 'skills':
 			skills = i[1].split(',')
 		if i[0] == 'levels':

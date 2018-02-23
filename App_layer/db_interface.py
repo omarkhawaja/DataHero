@@ -37,8 +37,8 @@ class OR_inputs(object):
 
 			data = cur.fetchall()
 			courses = [x[0] for x in data]
-			ratings = [x[1] for x in data]
-			prices = [x[2] for x in data]
+			ratings = [float(x[1]) for x in data]
+			prices = [float(x[2]) for x in data]
 			lengths = [float(x[3]) for x in data]
 
 			cleaned_prices = [float(s.split("$",1)[1].replace('USD','').strip()) if '$' in s else 0 for s in prices]
@@ -67,7 +67,6 @@ class OR_inputs(object):
 		num_skills_data = cur.fetchall()
 		num_skills = num_skills_data[0][0]
 
-		print(len(all_skills))
 		index = num_skills*num_courses
 
 		matrix = [list(all_skills[x:x+num_skills]) for x in range(0,index,num_skills)]
@@ -76,13 +75,13 @@ class OR_inputs(object):
 
 	def fetch_courseSkillLvls_matrix(self,num_courses):
 		cur.execute('''select x.id,
-					case when skill_lvl is null then 0 else 1 end as skill_lvl
-					from
-					(select x.id,s.id as 'skill' from Courses x cross join (select id from Skills order by id asc)s where x.course_provider_id = 3 order by x.id,s.id asc)x
-					left outer join
-					(select course_id,skill_id,skill_lvl from Course_skills x inner join Courses y on x.course_id = y.id and y.course_provider_id = 3 order by course_id,skill_id asc)y
-					on x.id = y.course_id and x.skill = y.skill_id
-					order by x.id,x.skill asc;''')
+		case when skill_lvl is null then 0 else 1 end as skill_lvl
+		from
+		(select x.id,s.id as 'skill' from Courses x cross join (select id from Skills order by id asc)s where x.course_provider_id = 3 order by x.id,s.id asc)x
+		left outer join
+		(select course_id,skill_id,skill_lvl from Course_skills x inner join Courses y on x.course_id = y.id and y.course_provider_id = 3 order by course_id,skill_id asc)y
+		on x.id = y.course_id and x.skill = y.skill_id
+		order by x.id,x.skill asc;''')
 
 		data_skills = cur.fetchall()
 		all_skills = [x[1] for x in data_skills]
@@ -91,7 +90,6 @@ class OR_inputs(object):
 		num_skills_data = cur.fetchall()
 		num_skills = num_skills_data[0][0]
 
-		print(len(all_skills))
 		index = num_skills*num_courses
 
 		matrix = [list(all_skills[x:x+num_skills]) for x in range(0,index,num_skills)]
