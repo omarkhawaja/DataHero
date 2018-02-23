@@ -86,7 +86,7 @@ class Create_plan(Resource):
         course_json = []
         #to store the json details for a course
         course = {}
-        
+
         for i in range(2):
             courses_recomended = run_algorithm(courses,courseSkill_matrix,courseSkillLvl_matrix,prices,ratings,lengths,timeAllocation,budget)
             outputs = OR_outputs(courses_recomended)
@@ -102,7 +102,16 @@ class Create_plan(Resource):
                     y = y + 1
                 course_json.append(course)
                 course = {}
-            courses_json.append(course_json)
+
+            total_price = {}
+            total_length = {}
+            total_courses = {}
+            total_price['total_price'] = 340
+            total_length['total_length'] = 340
+            total_courses['course_count'] = 5
+
+            course_json.append()
+            courses_json.append(course_json,total_price,total_length,total_courses)
             course_json = []
 
         return courses_json
