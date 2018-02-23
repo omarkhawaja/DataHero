@@ -79,13 +79,6 @@ class Create_plan(Resource):
         courses,ratings,prices,lengths = inputs.fetch_courses()
         courseSkill_matrix = inputs.fetch_courseSkill_matrix(len(courses))
         courseSkillLvl_matrix = inputs.fetch_courseSkillLvls_matrix(len(courses))
-        print(courses)
-        print(prices)
-        print(ratings)
-        print(lengths)
-        print(timeAllocation)
-        print(budget)
-
         courses_recomended = run_algorithm(courses,courseSkill_matrix,courseSkillLvl_matrix,prices,ratings,lengths,timeAllocation,budget)
         outputs = OR_outputs(courses_recomended)
         course_details,fields = outputs.fetch_course_details()
