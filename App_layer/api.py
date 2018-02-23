@@ -79,15 +79,18 @@ class Create_plan(Resource):
         courses,ratings,prices,lengths = inputs.fetch_courses()
         courseSkill_matrix = inputs.fetch_courseSkill_matrix(len(courses))
         courseSkillLvl_matrix = inputs.fetch_courseSkillLvls_matrix(len(courses))
-        
+
+        #to store all the plans
         courses_json = []
+        #to store the json for one plan 
+        course_json = []
+        #to store the json details for a course
+        course = {}
+        
         for i in range(2):
             courses_recomended = run_algorithm(courses,courseSkill_matrix,courseSkillLvl_matrix,prices,ratings,lengths,timeAllocation,budget)
             outputs = OR_outputs(courses_recomended)
             course_details,fields = outputs.fetch_course_details()
-
-            course = {}
-
             fields = [i[0] for i in fields if i[0] != 'time_scraped']
             for i in course_details:
                 y = 0
@@ -97,8 +100,10 @@ class Create_plan(Resource):
                     else:
                         course[field] = i[y]
                     y = y + 1
-                courses_json.append(course)
+                course_json.append(course)
                 course = {}
+            courses_json.append(course_json)
+            course_json = []
 
         return courses_json
         
