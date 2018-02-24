@@ -1,17 +1,7 @@
 from gurobipy import *
-import pickle
-import pandas as pd
 
-def run_algorithm(courses,courseSkills,courseLevel,cost,ratings,lengths,timeAllocation,budget):
+def run_algorithm(courses,courseSkills,courseLevel,cost,ratings,lengths,timeAllocation,budget,neededSkills,skillLvl_needed):
     try:
-        #temporary manual selection of skills needed
-        neededSkills = [0 for x in range(len(courseSkills[0]))]
-        neededSkills[19] = 1
-        neededSkills[25] = 1
-        
-        skillLvl_needed = [0 for x in range(len(courseSkills[0]))]
-        skillLvl_needed[25] = 1
-
         # Create a new model
         m = Model()
 

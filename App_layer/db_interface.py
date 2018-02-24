@@ -17,12 +17,6 @@ cur.execute('SET CHARACTER SET utf8;')
 cur.execute('SET character_set_connection=utf8;')
 
 class OR_inputs(object):
-	courses = []
-	ratings = []
-	prices = []
-	skills = []
-	courseSkill_matrix = []
-
 	def __init__(self, provider,rating=None):
 		super(OR_inputs, self).__init__()
 		self.provider = provider
@@ -98,8 +92,61 @@ class OR_inputs(object):
 
 		return matrix
 
-	def fetch_needed_skills(self,cur_skills):
-		pass
+	def fetch_needed_skills(self,position,user_skills):
+		required_skills = {}
+		needed_skills = {}
+		#0 doesn't have, 1 beginner/intermediate, 2 doesn't need
+		cur.execute('''select skill_id,skill_lvl from Position_skills where position_id = {};'''.format(position))
+		query_result = cur.fetchall()
+		required_skills = {int(x[0]):int(x[1]) for x in query_result}
+
+		for skill,lvl in required_skills.items():
+			if lvl == 0:
+				if user_skills[skill] + lvl == 1:
+					needed_skills[skill] = 0 
+				else:
+					needed_skills[skill] = None
+			elif lvl == 1:
+				if user_skills[skill] + lvl == 2:
+					needed_skills[skill] = [0,1]
+				elif user_skills[skill] + lvl == 3:
+					needed_skills[skill] = 1
+				elif user_skills[skill] + lvl == 4:
+					needed_skills[skill] = None
+			else:
+				print("ERROR CHECK CHECK CHECK")
+
+		return self.needed_skills_input(needed_skills)
+
+	def needed_skills_input(self,needed_skills):
+		cur.execute('''select count(*) from Skills;''')
+		query_result = cur.fetchall()
+		num_skills = query_result[0][0]
+
+		needed_skills_list = [0 for x in range(num_skills)] 
+		needed_levels_list = [0 for x in range(num_skills)]
+
+		for skill,lvl in needed_skills.items():
+			if lvl != None:
+				needed_skills_list[skill - 1] = 1
+			if lvl == 1:
+				needed_levels_list[skill - 1] = 1
+
+		return needed_skills_list,needed_levels_list
+
+	def fetch_tech_combinations(self,position):
+		combinations_skills = {}
+		cur.execute('''select combination_id from Position_combinations where position_id = {};'''.format(2))
+		query_result = cur.fetchall()
+		combination_ids = [x[0] for x in query_result]
+
+		for combination in combination_ids:
+			cur.execute('''select skill_id from Combination_skills where combination_id = {};'''.format(combination))
+			query_result = cur.fetchall()
+			combinations_skills[combination] = [x[0] for x in query_result]
+
+		return combinations_skills
+
 
 class OR_outputs(object):
 

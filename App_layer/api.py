@@ -7,7 +7,7 @@ from decimal import Decimal as D
 
 from PythonModel import run_algorithm
 from db_interface import OR_inputs, OR_outputs
-from utils import missing_skills, parse_request
+from utils import add_tech_combo, parse_request
 
 config = {
 'user': 'root',
@@ -69,17 +69,6 @@ class Position_skills(Resource):
 
 class Create_plan(Resource):
     def get(self,skills_needed_string):
-
-        #changed from skills_needed
-        #0 doesn't have, 1 beginner/intermediate, 2 doesn't need
-        position,budget,timeAllocation,skills,skill_lvls = parse_request(skills_needed_string)
-        #skills_needed,skillLvl_needed = missing_skills()
-
-        inputs = OR_inputs(3)
-        courses,ratings,prices,lengths = inputs.fetch_courses()
-        courseSkill_matrix = inputs.fetch_courseSkill_matrix(len(courses))
-        courseSkillLvl_matrix = inputs.fetch_courseSkillLvls_matrix(len(courses))
-
         #to store all the plans
         courses_json = []
         #to store the json for one plan 
@@ -87,10 +76,22 @@ class Create_plan(Resource):
         #to store the json details for a course
         course = {}
 
-        for i in range(2):
-            courses_recomended = run_algorithm(courses,courseSkill_matrix,courseSkillLvl_matrix,prices,ratings,lengths,timeAllocation,budget)
+        position,budget,timeAllocation,user_skills = parse_request(skills_needed_string)
+
+        inputs = OR_inputs(3)
+        courses,ratings,prices,lengths = inputs.fetch_courses()
+        courseSkill_matrix = inputs.fetch_courseSkill_matrix(len(courses))
+        courseSkillLvl_matrix = inputs.fetch_courseSkillLvls_matrix(len(courses))
+        combinations = inputs.fetch_tech_combinations(position)
+        needed_skills,needed_skills_lvls = inputs.fetch_needed_skills(position,user_skills)
+
+        for tech_skill_combo in combinations.values():
+            skills_needed = add_tech_combo(needed_skills,tech_skill_combo)
+            courses_recomended = run_algorithm(courses,courseSkill_matrix,courseSkillLvl_matrix,prices,ratings,lengths,timeAllocation,budget,skills_needed,needed_skills_lvls)
             outputs = OR_outputs(courses_recomended)
             course_details,fields = outputs.fetch_course_details()
+
+            #replace with a jsonify function
             fields = [i[0] for i in fields if i[0] != 'time_scraped']
             for i in course_details:
                 y = 0
@@ -103,6 +104,7 @@ class Create_plan(Resource):
                 course_json.append(course)
                 course = {}
 
+            #replace these with a util function
             total_price = {}
             total_length = {}
             total_courses = {}
@@ -110,13 +112,14 @@ class Create_plan(Resource):
             total_length['total_length'] = 340
             total_courses['course_count'] = 5
 
-            courses_json.append(course_json)
-            courses_json.append(total_price)
+            course_json.append(total_price)
             course_json.append(total_length)
             course_json.append(total_courses)
+            courses_json.append(course_json)
             course_json = []
 
         return courses_json
+            
         
 api.add_resource(Position_skills, '/position_skills/')
 api.add_resource(Create_plan, '/create_plan/<skills_needed_string>')

@@ -107,6 +107,28 @@ CREATE TABLE Position_skills (
 	FOREIGN KEY (position_id) REFERENCES Positions(id),
 	FOREIGN KEY (skill_id) REFERENCES Skills(id)
    );
+   
+CREATE TABLE Technical_combinations (
+	`id` INT NOT NULL AUTO_INCREMENT,
+	`name` VARCHAR(100) NOT NULL, 
+	`description` TEXT, 
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE Combination_skills (
+	`combination_id` INT NOT NULL,
+	`skill_id` INT NOT NULL, 
+	`skill_lvl` INT,
+	FOREIGN KEY (combination_id) REFERENCES Technical_combinations(id),
+	FOREIGN KEY (skill_id) REFERENCES Skills(id)
+   );
+   
+CREATE TABLE Position_combinations (
+	`position_id` INT NOT NULL,
+	`combination_id` INT NOT NULL, 
+	FOREIGN KEY (position_id) REFERENCES Positions(id),
+	FOREIGN KEY (combination_id) REFERENCES Technical_combinations(id)
+   );
 
 CREATE TABLE Scraper_logs (
     `id` INT NOT NULL AUTO_INCREMENT,
