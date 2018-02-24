@@ -7,7 +7,7 @@ def run_algorithm(courses,courseSkills,courseLevel,cost,ratings,lengths,timeAllo
 
         numSkills = len(courseSkills[0])
         numCourses = len(courses)
-
+        
         # Create Model Variables
         x = {} # binary variables for courses. X(i) = 1 if Course i is selected. 0 OW
         for i in range(numCourses):
@@ -21,7 +21,7 @@ def run_algorithm(courses,courseSkills,courseLevel,cost,ratings,lengths,timeAllo
             m.addConstr(quicksum(x[i] * courseSkills[i][s] for i in range(numCourses)) >= neededSkills[s])
         # Course Level Constraint:
         for s in range(numSkills):
-            m.addConstr(quicksum(x[i] * courseLevel[i][s] for i in range(numCourses)) >= skillLvl_needed[s])
+            m.addConstr(quicksum(x[i] * courseLevel[i][s] for i in range(numCourses)) == skillLvl_needed[s])
 
         # Budget Constraint
         m.addConstr(quicksum(cost[i]*x[i] for i in range(numCourses)) <= budget)
