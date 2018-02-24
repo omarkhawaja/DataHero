@@ -91,7 +91,7 @@ class OR_inputs(object):
 		matrix = [list(all_skills[x:x+num_skills]) for x in range(0,index,num_skills)]
 
 		return matrix
-
+		
 	def fetch_needed_skills(self,position,user_skills):
 		required_skills = {}
 		needed_skills = {}

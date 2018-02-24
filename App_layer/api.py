@@ -20,7 +20,7 @@ app = Flask(__name__)
 api = Api(app)
 CORS(app)
 
-class Position_skills(Resource):
+class Positions(Resource):
     def get(self):
         course = {}
         courses = []
@@ -41,31 +41,6 @@ class Position_skills(Resource):
             course = {}
 
         return courses
-    
-    def post(self):
-        conn = db_connect.connect()
-        print(request.json)
-        LastName = request.json['LastName']
-        FirstName = request.json['FirstName']
-        Title = request.json['Title']
-        ReportsTo = request.json['ReportsTo']
-        BirthDate = request.json['BirthDate']
-        HireDate = request.json['HireDate']
-        Address = request.json['Address']
-        City = request.json['City']
-        State = request.json['State']
-        Country = request.json['Country']
-        PostalCode = request.json['PostalCode']
-        Phone = request.json['Phone']
-        Fax = request.json['Fax']
-        Email = request.json['Email']
-        query = conn.execute("insert into employees values(null,'{0}','{1}','{2}','{3}', \
-                             '{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}', \
-                             '{13}')".format(LastName,FirstName,Title,
-                             ReportsTo, BirthDate, HireDate, Address,
-                             City, State, Country, PostalCode, Phone, Fax,
-                             Email))
-        return {'status':'success'}
 
 class Create_plan(Resource):
     def get(self,skills_needed_string):
@@ -86,6 +61,18 @@ class Create_plan(Resource):
         needed_skills,needed_skills_lvls = inputs.fetch_needed_skills(position,user_skills)
 
         for tech_skill_combo in combinations.values():
+            #replace these with a util function
+            total_price = {}
+            total_length = {}
+            total_courses = {}
+            total_price['total_price'] = 340
+            total_length['total_length'] = 340
+            total_courses['course_count'] = 5
+
+            course_json.append(total_price)
+            course_json.append(total_length)
+            course_json.append(total_courses)
+
             skills_needed = add_tech_combo(needed_skills,tech_skill_combo)
             courses_recomended = run_algorithm(courses,courseSkill_matrix,courseSkillLvl_matrix,prices,ratings,lengths,timeAllocation,budget,skills_needed,needed_skills_lvls)
             outputs = OR_outputs(courses_recomended)
@@ -104,24 +91,13 @@ class Create_plan(Resource):
                 course_json.append(course)
                 course = {}
 
-            #replace these with a util function
-            total_price = {}
-            total_length = {}
-            total_courses = {}
-            total_price['total_price'] = 340
-            total_length['total_length'] = 340
-            total_courses['course_count'] = 5
-
-            course_json.append(total_price)
-            course_json.append(total_length)
-            course_json.append(total_courses)
             courses_json.append(course_json)
             course_json = []
 
         return courses_json
             
         
-api.add_resource(Position_skills, '/position_skills/')
+#api.add_resource(Positions, '/positions', '/computers/<computer_id>/owner')
 api.add_resource(Create_plan, '/create_plan/<skills_needed_string>')
 
 if __name__ == '__main__':

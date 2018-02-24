@@ -28,9 +28,9 @@ Insert into Combination_skills (combination_id, skill_id) values (2,16);
 Insert into Combination_skills (combination_id, skill_id) values (2,20);
 Insert into Combination_skills (combination_id, skill_id) values (3,11);
 Insert into Combination_skills (combination_id, skill_id) values (3,12);
-Insert into Combination_skills (combination_id, skill_id) values (4,1);
-Insert into Combination_skills (combination_id, skill_id) values (4,2);
-Insert into Combination_skills (combination_id, skill_id) values (4,8);
+Insert into Combination_skills (combination_id, skill_id) values (5,1);
+Insert into Combination_skills (combination_id, skill_id) values (5,2);
+Insert into Combination_skills (combination_id, skill_id) values (5,8);
 
 Insert into Position_combinations (position_id, combination_id) values (2,3);
 Insert into Position_combinations (position_id, combination_id) values (2,4);
