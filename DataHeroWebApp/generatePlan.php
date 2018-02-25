@@ -1,8 +1,10 @@
 <?php 
 
     include ("login.php");
+    include ("BootstrapCDN.php");
 	include ("connection.php") ;
     include ("navBar.php");
+
     
     if (is_null($_SESSION['id'])) header("Location:index.php") ;
 ?>
@@ -37,6 +39,10 @@
         table.borderless th {
             border: none !important;
         }
+
+        #hide {
+            display: none;
+        }
     </style>
 </head>
 
@@ -53,42 +59,57 @@
         <div class="row">
             <div class="col-md-6 col-md-offset-2" id="secondRow">
 
-                <form>
+                <form method="POST" id="inputForm" action="output.php">
                     <div class="form-group">
-                        <label for="jobTitle"><h3>Select Job Title:</h3></label>
+                        <label><h3>Select Career Path:</h3></label>
 
-                        <select class="form-control" id="jobTitle" onchange="UpdateSkills()">
-                            <option selected>----</option>
-                            
+                        <select required class=" form-control" id="jobTitle" name="position" onchange="UpdateSkills()">
+                            <option disabled selected>Select position</option>  
                             <?php    
-                            $query = "SELECT `position` FROM Positions" ;
+                            $query = "SELECT * FROM Positions" ;
                             $result = mysqli_query($link,$query) ;	
                             if (mysqli_num_rows($result) > 0) 
                             {
                                 while($positions = mysqli_fetch_assoc($result))
                                 {
-                                    echo("<option>".$positions['position']."</option>");
+                                    echo('<option value ="'.$positions['id'].'" >'.$positions["position"].'</option>');
                                 }
                             }
                             ?>
                         </select>
                     </div>
 
-                    <script>
-                        //Write JS script to output relevant skills based on "jobTitle" selection:
+                    <script type="text/javascript">
+                        //Write JS script to output relevant skills based on "jobTitle" selection: onchange="UpdateSkills()
+
+                        var changeOccured = false;
+
                         function UpdateSkills() {
-
                             var SelectedJobTitle = document.getElementById("jobTitle").value;
-                            if (SelectedJobTitle == "Data Analyst") {
-                                document.getElementById.innerHTML = ""
+                            if (changeOccured == true) {
+                                location.reload();
+                                return;
+                            }
+                            //Need to reload page to remove any selected skills in hidden divs
+                            changeOccured = true;
 
-                            } else if (SelectedJobTitle == "") {
-                                document.getElementById.innerHTML = ""
-                            } else if (SelectedJobTitle == "") {
-                                document.getElementById.innerHTML = ""
+                            if (SelectedJobTitle == 1) {
 
-                            } else if (SelectedJobTitle == "") {
-                                document.getElementById.innerHTML = ""
+                                document.getElementById("Data Scientist Skills").style.display = "block";
+
+                            } else if (SelectedJobTitle == 2) {
+                                document.getElementById("Data Engineer Skills").style.display = "block";
+
+                            } else if (SelectedJobTitle == 3) {
+                                document.getElementById("Data Analyst Skills").style.display = "block";
+
+                            } else if (SelectedJobTitle == 4) {
+                                document.getElementById("Business Intelligence Analyst Skills").style.display = "block";
+                                
+                            } else if (SelectedJobTitle == 5) {
+                                document.getElementById("Biostatistician Skills").style.display = "block";
+                            } else {
+                                return;
                             }
                         }
                     </script>
@@ -104,7 +125,7 @@
                         while($positions = mysqli_fetch_assoc($result))
                         {
                     ?>
-                    <div class="form-group">
+                    <div style="display:none;" class="form-group" id="<?php echo($positions['position']);?> Skills">
                         <table class="table" id="<?php echo($positions['position']);?>Skills">
                             <thead>
                                 <tr>
@@ -113,7 +134,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                    <?php
+                                <?php
                     $query2 = "SELECT * FROM `Skills` WHERE `id` IS NOT NULL AND `id` IN 
                     (SELECT `skill_id` FROM `Position_skills` WHERE `position_id` = ".$positions['id'].");";
                     $result2 = mysqli_query($link,$query2) ;
@@ -129,21 +150,21 @@
                                             </td>
                                             <td>
                                                 <label class="radio-inline">
-                        <input type="radio" name="<?php echo($skills['id']);?>" value = "1">no
+                        <input required type="radio" name="<?php echo($skills['id']);?>" value = "1">Needed
                         </label>
 
                                                 <label class="radio-inline">
-                        <input  type="radio" name="<?php echo($skills['id']);?>" value = "2">Beginner
+                        <input type="radio" name="<?php echo($skills['id']);?>" value = "2">Beginner
                         </label>
 
                                                 <label class="radio-inline">
-                        <input disabled type="radio" name="<?php echo($skills['id']);?>" value = "3">Advanced
+                        <input type="radio" name="<?php echo($skills['id']);?>" value = "3">Advanced
                         </label>
                                             </td>
                                         </div>
                                     </tr>
 
-                    <?php
+                                    <?php
                         }
                     }
                     ?>
@@ -158,29 +179,34 @@
                         <!-- table body to be printed via php script: loop with table rows-->
 
                         <div class="form-group">
+
                             <label class="large" for="budget"><h3>Plan Budget</h3></label>
-                            <input type="number" class="form-control" id="budget">
+                            <input id="budget" name="budget" type="number" class="form-control" required>
                             <p>Plan budget description goes here! </p>
                             <hr>
+
                         </div>
 
                         <div class="form-group">
+
                             <h3>Time Allocation</h3>
-                            <label class="large" for="budget"><h4>Desired number of weeks to finish plan:</h4></label>
-                            <input type="number" class="form-control" id="budget">
+                            <label class="large" for="length"><h4>Total time available to work on plan in hours:</h4></label>
+                            <input type="number" class="form-control" id="length" name="length" required>
                             <p>Time Allocation description1 goes here </p>
-                            <label class="large" for="budget"><h4>Hours available per week to work on plan:</h4></label>
-                            <input type="number" class="form-control" id="budget">
-                            <p>Time Allocation description2 goes here </p>
+
+<!--                            <label class="large" for="budget"><h4>Hours available per week to work on plan:</h4></label>
+                            <input type="number" class="form-control" id="hours" name="hours">
+                            <p>Time Allocation description2 goes here </p>-->
+
                             <hr>
                         </div>
+
                         <div class="from-group">
 
                         </div>
 
-
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary btn-lg">Generate New Plan</button>
+                            <button type="submit" class="btn btn-primary btn-lg" >Generate New Plan</button>
                         </div>
                 </form>
 
@@ -189,5 +215,57 @@
     </div>
 
 </body>
+
+
+<!--<script type="text/javascript">
+/*
+    function inputsArray() {
+
+        var inputObjs = document.getElementsByTagName('input');
+        var skills = inputObjs.map(function(el){
+            return el.value;
+}).join(',');
+        alert(skills) ;
+        
+        var skills =  [].slice.call(inputObjs);
+        alert(skills) ;
+        console.log(inputObjs);
+        for (var i = 0; i < inputObjs.length; ++i) {
+            skills.append(inputObjs[i].value);
+            alert(skills);
+
+        }
+        alert(skills);
+    }
+*/
+
+
+
+      
+        var xmlhttp = new XMLHttpRequest();
+        var url = 'http://127.0.0.1:5000/create_plan/15';
+
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var myArr = JSON.parse(this.responseText);
+                console.log(myArr);
+                myFunction(myArr);
+            }
+        };
+
+        
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+
+        function myFunction(arr) {
+            var out = "";
+            var i;
+            for (i = 0; i < arr.length; i++) {
+                out += '<p>' + arr[i].name + '</p>';
+                out += '<p>' + arr[i].length + '</p>';
+            }
+            document.getElementById("id01").innerHTML = out;
+        }
+</script>-->
 
 </html>

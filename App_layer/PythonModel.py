@@ -15,7 +15,7 @@ def run_algorithm(courses,courseSkills,courseLevel,cost,ratings,lengths,timeAllo
 
         m.update()
         # Set Objective Function
-        m.setObjective(quicksum((x[i] * ratings[i]) + (x[i]*sum(courseLevel[i])) for i in range(numCourses)), GRB.MINIMIZE)
+        m.setObjective(quicksum((x[i] * ratings[i])  for i in range(numCourses)), GRB.MINIMIZE)
         # Set Partitioning Constraints / Modified to only work with "neededSkills"
         for s in range(numSkills):
             m.addConstr(quicksum(x[i] * courseSkills[i][s] for i in range(numCourses)) >= neededSkills[s])
