@@ -38,20 +38,44 @@ def get_number_of_courses():
 def add_plan_details():
 	pass
 
-def jsonify(data,fields):
+def jsonify(data,fields,plan = None):
 	datum_json = {}
 	data_json = []
 
-	#replace with i[0] not in (config list of unwanted fields)
-	fields = [i[0] for i in fields if i[0] != 'time_scraped']
-	for i in data:
-		for indx,field in enumerate(fields):
-			if isinstance(i[indx],D):
-				datum_json[field] = float(i[indx])
-			else:
-				datum_json[field] = i[indx]
-		data_json.append(datum_json)
-		datum_json = {}
+	if plan = None:
+		#replace with i[0] not in (config list of unwanted fields)
+		fields = [i[0] for i in fields if i[0] != 'time_scraped']
+		for i in data:
+			for indx,field in enumerate(fields):
+				if isinstance(i[indx],D):
+					datum_json[field] = float(i[indx])
+				else:
+					datum_json[field] = i[indx]
+			data_json.append(datum_json)
+			datum_json = {}
+	else:
+		#replace these with a util function
+		total_price = {}
+		total_length = {}
+		total_courses = {}
+		total_price['total_price'] = 340
+		total_length['total_length'] = 340
+		total_courses['course_count'] = 5
+
+		data_json.append(total_price)
+		data_json.append(total_length)
+		data_json.append(total_courses)
+
+		#replace with i[0] not in (config list of unwanted fields)
+		fields = [i[0] for i in fields if i[0] != 'time_scraped']
+		for i in data:
+			for indx,field in enumerate(fields):
+				if isinstance(i[indx],D):
+					datum_json[field] = float(i[indx])
+				else:
+					datum_json[field] = i[indx]
+			data_json.append(datum_json)
+			datum_json = {}
 
 	return data_json
 
