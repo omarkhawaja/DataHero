@@ -73,17 +73,23 @@ CREATE TABLE User_info (
 CREATE TABLE Plans (
     `id` INT NOT NULL AUTO_INCREMENT,
     `user_id` INT,
-    `position` VARCHAR(200),
-    `budget`    float ,
-    `weeks` INT,
-    `hours` float,
-    `MOOC1` INT,
-    `MOOC2` INT, 
-    `MOOC3` INT,
-    `MOOC4` INT,
+    `position_id` INT,
+    `cost` float ,
+    `length`  float,
+    `number_courses` INT,
+    `technical_skills_id` INT,
     `time_stamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(id),
+    FOREIGN KEY (position_id) REFERENCES Positions(id),
+    FOREIGN KEY (technical_skills_id) REFERENCES Technical_combinations(id),
     PRIMARY KEY (id)
+);
+
+CREATE TABLE Plan_skills (
+    `plan_id` INT NOT NULL,
+    `skill_id` INT NOT NULL,
+    FOREIGN KEY (plan_id) REFERENCES 	Plans(id),
+	FOREIGN KEY (skill_id) REFERENCES Skills(id)
 );
 
 CREATE TABLE Plan_courses (

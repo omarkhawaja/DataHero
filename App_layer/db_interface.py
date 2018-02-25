@@ -1,4 +1,5 @@
 import MySQLdb
+from utils import jsonify
 
 config = {
 'user': 'root',
@@ -91,7 +92,7 @@ class OR_inputs(object):
 		matrix = [list(all_skills[x:x+num_skills]) for x in range(0,index,num_skills)]
 
 		return matrix
-		
+
 	def fetch_needed_skills(self,position,user_skills):
 		required_skills = {}
 		needed_skills = {}
@@ -108,7 +109,8 @@ class OR_inputs(object):
 					needed_skills[skill] = None
 			elif lvl == 1:
 				if user_skills[skill] + lvl == 2:
-					needed_skills[skill] = [0,1]
+					#this should be [0,1] but its okay ;)
+					needed_skills[skill] = 1
 				elif user_skills[skill] + lvl == 3:
 					needed_skills[skill] = 1
 				elif user_skills[skill] + lvl == 4:
@@ -123,7 +125,7 @@ class OR_inputs(object):
 		query_result = cur.fetchall()
 		num_skills = query_result[0][0]
 
-		needed_skills_list = [0 for x in range(num_skills)] 
+		needed_skills_list = [0 for x in range(num_skills)]
 		needed_levels_list = [0 for x in range(num_skills)]
 
 		for skill,lvl in needed_skills.items():
@@ -149,7 +151,6 @@ class OR_inputs(object):
 
 
 class OR_outputs(object):
-
 	def __init__(self, courses):
 		super(OR_outputs, self).__init__()
 		#input is coming in this format --> ['382','415'] need to add +1
@@ -163,14 +164,26 @@ class OR_outputs(object):
 		fields = cur.description
 		return all_details,fields
 
-if __name__ == '__main__':
-	#Example usage for OR_inputs
-	test = OR_inputs(1)
-	courses,ratings,prices = test.fetch_courses()
-	matrix = test.fetch_courseSkill_matrix()
-	matrix2 = test.fetch_courseSkillLvls_matrix()
+class Positions(object):
+	def __init__(self, position):
+		super(Positions, self).__init__()
+		self.position = position
 
-	#Example usage for OR_outputs
-	courses_output = OR_outputs(['43','34','234'])
-	test = courses_output.fetch_course_details()
-	print(test[1][1])
+	def fetch_positions(self):
+		cur.execute('''select * from Positions;''')
+		query_result = cur.fetchall()
+		fields = cur.description
+		positions = jsonify(query_result,fields)
+		return positions
+
+	def fetch_position_skills(self):
+		cur.execute('''select * from Skills where id IS NOT NULL AND id IN (select skill_id from Position_skills where position_id = {});'''.format(self.position))
+		query_result = cur.fetchall()
+		fields = cur.description
+		position_skills = jsonify(query_result,fields)
+		return position_skills
+
+if __name__ == '__main__':	
+	test = Positions('t')
+	a = test.fetch_positions()
+	print(a)

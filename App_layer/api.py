@@ -5,9 +5,9 @@ from flask_cors import CORS
 import json
 from decimal import Decimal as D
 
-from PythonModel import run_algorithm
-from db_interface import OR_inputs, OR_outputs
-from utils import add_tech_combo, parse_request
+#from PythonModel import run_algorithm
+from db_interface import OR_inputs, OR_outputs, Positions
+from utils import add_tech_combo, parse_request, jsonify, parse_normal
 
 config = {
 'user': 'root',
@@ -20,27 +20,22 @@ app = Flask(__name__)
 api = Api(app)
 CORS(app)
 
-class Positions(Resource):
+class Positions_list(Resource):
+    def get(self,):
+        data = Positions(None)
+        positions = data.fetch_positions()
+        return positions
+
+class Position_skills(Resource):
+    def get(self,position_id):
+        position = parse_normal(position_id)
+        data = Positions(position)
+        position_skills = data.fetch_position_skills()
+        return position_skills
+
+class Plans(Resource):
     def get(self):
-        course = {}
-        courses = []
-
-        conn = MySQLdb.connect(**config)
-        cur = conn.cursor()
-        conn.set_character_set('utf8')
-
-        cur.execute("select * from Courses;")
-        result = cur.fetchall()
-        fields = [i[0] for i in cur.description if i[0] != 'time_scraped']
-        for i in result:
-            y = 0
-            for field in fields:
-                course[field] = i[y]
-                y = y + 1
-            courses.append(course)
-            course = {}
-
-        return courses
+        pass
 
 class Create_plan(Resource):
     def get(self,skills_needed_string):
@@ -78,7 +73,10 @@ class Create_plan(Resource):
             outputs = OR_outputs(courses_recomended)
             course_details,fields = outputs.fetch_course_details()
 
-            #replace with a jsonify function
+            course_json = jsonify(course_details,fields)
+            courses_json.append(course_json)
+
+            '''#replace with a jsonify function
             fields = [i[0] for i in fields if i[0] != 'time_scraped']
             for i in course_details:
                 y = 0
@@ -90,14 +88,14 @@ class Create_plan(Resource):
                     y = y + 1
                 course_json.append(course)
                 course = {}
-
-            courses_json.append(course_json)
-            course_json = []
+                courses_json.append(course_json)
+            course_json = []'''
 
         return courses_json
             
         
-#api.add_resource(Positions, '/positions', '/computers/<computer_id>/owner')
+api.add_resource(Positions_list, '/positions')
+api.add_resource(Position_skills, '/positions/skills/<position_id>')
 api.add_resource(Create_plan, '/create_plan/<skills_needed_string>')
 
 if __name__ == '__main__':

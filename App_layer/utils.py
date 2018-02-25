@@ -1,4 +1,5 @@
 from urllib.parse import parse_qsl
+from decimal import Decimal as D
 
 def parse_request(request_string):
 	parsed = parse_qsl(request_string)
@@ -18,6 +19,13 @@ def parse_request(request_string):
 
 	return position,budget,timeAllocation,user_skills
 
+def parse_normal(request_string):
+	parsed = parse_qsl(request_string)
+	if parsed[0][1] is not None:
+		return parsed[0][1]
+	else:
+		return None
+
 def get_total_price():
 	pass
 
@@ -30,8 +38,22 @@ def get_number_of_courses():
 def add_plan_details():
 	pass
 
-def jsonify_plan():
-	pass
+def jsonify(data,fields):
+	datum_json = {}
+	data_json = []
+
+	#replace with i[0] not in (config list of unwanted fields)
+	fields = [i[0] for i in fields if i[0] != 'time_scraped']
+	for i in data:
+		for indx,field in enumerate(fields):
+			if isinstance(i[indx],D):
+				datum_json[field] = float(i[indx])
+			else:
+				datum_json[field] = i[indx]
+		data_json.append(datum_json)
+		datum_json = {}
+
+	return data_json
 
 def add_tech_combo(needed_skills,tech_skill_combo):
 	needed_skills_with_tech_combo = needed_skills[:]
@@ -41,4 +63,5 @@ def add_tech_combo(needed_skills,tech_skill_combo):
 
 if __name__ == '__main__':
 	x,y,z,v = parse_request("budget=5&length=4&position=1&skills=4,15,55&levels=0,1,0")
-	print(v[55])
+	a = parse_normal("position_id=2")
+	print(a)
