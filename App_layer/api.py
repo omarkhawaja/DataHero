@@ -51,6 +51,7 @@ class Create_plan(Resource):
             plan_json = outputs.fetch_course_details()
             plan_id = plan.add(position,plan_json,combination_ids[i],needed_skills)
             plan_json[0]['plan_id'] = plan_id
+            plan_json[0]['tech_combo'] = tech_skill_combo
             plans.append(plan_json)
             i = i + 1
 

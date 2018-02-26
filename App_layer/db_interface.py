@@ -149,7 +149,6 @@ class OR_inputs(object):
 
 		return combination_ids,combinations_skills
 
-
 class OR_outputs(object):
 	def __init__(self, courses):
 		super(OR_outputs, self).__init__()
@@ -240,7 +239,7 @@ class Plans(object):
 	def fetch(self):
 		plans = []
 		cur.execute('''select * from Plans where user_id = {};'''.format(self.user))
-		pass 
+		pass
 
 if __name__ == '__main__':	
 	test = Positions('t')
