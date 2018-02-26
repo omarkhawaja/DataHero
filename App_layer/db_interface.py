@@ -244,7 +244,7 @@ class Plans(object):
 class Skills(object):
 	def __init__(self, skills):
 		super(Skills, self).__init__()
-		self.skills = ','.join(str(skills))
+		self.skills = ','.join([str(i) for i in skills])
 
 	def get_names(self):
 		cur.execute('''select skill from Skills where skill_id in ({});'''.format(self.skills))
