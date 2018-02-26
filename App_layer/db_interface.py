@@ -221,7 +221,8 @@ class Plans(object):
 
 			#needed_skills is a binary list indicating if a skill is needed. The indx's in the list refer to the skill_id - 1.
 			for indx,skill in enumerate(needed_skills):
-				cur.execute('''insert into Plan_skills (plan_id,skill_id) values ({},{});'''.format(plan,indx + 1))
+				if skill == 1:
+					cur.execute('''insert into Plan_skills (plan_id,skill_id) values ({},{});'''.format(plan,indx + 1))
 
 			conn.commit()
 			return plan
