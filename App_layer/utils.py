@@ -51,7 +51,8 @@ def add_plan_details(data_json=None,type='create'):
 		data_json.append(total_length)
 		data_json.append(total_courses)
 		data_json.append(plan_id)
-
+		return data_json
+		
 	elif type == 'populate':
 		courses = data_json[4:]
 		data_json['total_price'] = get_total_price([x['price'] for x in courses])
