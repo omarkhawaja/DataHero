@@ -204,9 +204,9 @@ class Plans(object):
 	#look into what to do for error handling
 	def add(self,position,plan_json,combination,needed_skills):
 		plan_price = plan_json[0]['total_price']
-		plan_length = plan_json[1]['total_length']
-		course_count = plan_json[2]['course_count']
-		courses = plan_json[4:]
+		plan_length = plan_json[0]['total_length']
+		course_count = plan_json[0]['course_count']
+		courses = plan_json[1:]
 
 		try:
 			cur.execute('''insert into Plans (position_id,cost,length,number_courses,technical_skills_id) values ({},{},{},{},{});'''.format(position,plan_price,plan_length,course_count,combination))
