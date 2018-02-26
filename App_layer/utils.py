@@ -42,7 +42,7 @@ def get_number_of_courses(courses):
 def add_plan_details(data_json=None,type='create'):
 	if type == 'create':
 		data_json = []
-		details = {'total_price':340,'total_length': 340,'course_count': 5'plan_id': 0}
+		details = {'total_price':340,'total_length': 340,'course_count': 5,'plan_id': 0}
 		data_json.append(details)
 		return data_json
 		
