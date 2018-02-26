@@ -50,7 +50,7 @@ class Create_plan(Resource):
             outputs = OR_outputs(courses_recomended)
             plan_json = outputs.fetch_course_details()
             plan_id = plan.add(position,plan_json,combination_ids[i],needed_skills)
-            plan_json[3]['plan_id'] = plan_id
+            plan_json[0]['plan_id'] = plan_id
             plans.append(plan_json)
             i = i + 1
 

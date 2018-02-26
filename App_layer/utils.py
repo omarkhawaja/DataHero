@@ -42,22 +42,15 @@ def get_number_of_courses(courses):
 def add_plan_details(data_json=None,type='create'):
 	if type == 'create':
 		data_json = []
-		total_price = {'total_price':340}
-		total_length = {'total_length': 340}
-		total_courses = {'course_count': 5}
-		plan_id = {'plan_id': 0}
-
-		data_json.append(total_price)
-		data_json.append(total_length)
-		data_json.append(total_courses)
-		data_json.append(plan_id)
+		details = {'total_price':340,'total_length': 340,'course_count': 5'plan_id': 0}
+		data_json.append(details)
 		return data_json
 		
 	elif type == 'populate':
-		courses = data_json[4:]
+		courses = data_json[1:]
 		data_json[0]['total_price'] = get_total_price([x['price'] for x in courses])
-		data_json[1]['total_length'] = get_total_length([int(x['length']) for x in courses])
-		data_json[2]['course_count'] = get_number_of_courses([x['id'] for x in courses])
+		data_json[0]['total_length'] = get_total_length([int(x['length']) for x in courses])
+		data_json[0]['course_count'] = get_number_of_courses([x['id'] for x in courses])
 		return data_json
 
 def jsonify(data,fields,plan = None):
