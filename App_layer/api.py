@@ -6,7 +6,7 @@ import json
 from decimal import Decimal as D
 
 from PythonModel import run_algorithm
-from db_interface import OR_inputs, OR_outputs, Positions, Plans
+from db_interface import OR_inputs, OR_outputs, Positions, Plans, Skills
 from utils import add_tech_combo, parse_request, jsonify, parse_normal
 
 app = Flask(__name__)
@@ -50,8 +50,12 @@ class Create_plan(Resource):
             outputs = OR_outputs(courses_recomended)
             plan_json = outputs.fetch_course_details()
             plan_id = plan.add(position,plan_json,combination_ids[i],needed_skills)
+            
             plan_json[0]['plan_id'] = plan_id
-            plan_json[0]['tech_combo'] = tech_skill_combo
+            
+            skills = Skills(tech_skill_combo)
+            plan_json[0]['tech_combo'] = skills.get_names()
+            
             plans.append(plan_json)
             i = i + 1
 

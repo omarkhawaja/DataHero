@@ -241,6 +241,17 @@ class Plans(object):
 		cur.execute('''select * from Plans where user_id = {};'''.format(self.user))
 		pass
 
+class Skills(object):
+	def __init__(self, skills):
+		super(Skills, self).__init__()
+		self.skills = ','.join(skills)
+
+	def get_names(self):
+		cur.execute('''select skill from Skills where skill_id in ({});'''.format(skills))
+		query_result = cur.fetchall()
+		skill_names = [x[0] for x in query_result]
+		return skill_names
+		
 if __name__ == '__main__':	
 	test = Positions('t')
 	a = test.fetch_positions()
