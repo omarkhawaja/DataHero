@@ -27,13 +27,17 @@ def parse_normal(request_string):
 		return None
 
 def get_total_price(prices):
-	total_price = sum(prices)
+	cleaned_prices = [float(s.split("$",1)[1].replace('USD','').strip()) if '$' in s else 0 for s in prices]
+	total_price = sum(cleaned_prices)
+	return total_price
 
 def get_total_length(lengths):
 	total_time = sum(lengths)
+	return total_time
 
 def get_number_of_courses(courses):
 	total_courses = len(courses)
+	return total_courses
 
 def add_plan_details(data_json=None,type='create'):
 	if type == 'create':
