@@ -35,11 +35,25 @@ def get_total_length(lengths):
 def get_number_of_courses(courses):
 	total_courses = len(courses)
 
-def add_plan_details(data_json,data):
-	data_json['total_price'] = get_total_price()
-	data_json['total_length'] = get_total_length()
-	data_json['course_count'] = get_number_of_courses()
-	retrn(data_json)
+def add_plan_details(data_json=None,type='create'):
+	if type == 'create':
+		data_json = {}
+		total_price['total_price'] = 340
+		total_length['total_length'] = 340
+		total_courses['course_count'] = 5
+		plan_id['plan_id'] = 0
+
+		data_json.append(total_price)
+		data_json.append(total_length)
+		data_json.append(total_courses)
+		data_json.append(plan_id)
+
+	elif type == 'populate':
+		courses = data_json[4:]
+		data_json['total_price'] = get_total_price([x['price'] for x in courses])
+		data_json['total_length'] = get_total_length([x['length'] for x in courses])
+		data_json['course_count'] = get_number_of_courses([x['id'] for x in courses])
+		return data_json
 
 def jsonify(data,fields,plan = None):
 	datum_json = {}
@@ -57,17 +71,7 @@ def jsonify(data,fields,plan = None):
 			data_json.append(datum_json)
 			datum_json = {}
 	else:
-		#replace these with a util function
-		total_price = {}
-		total_length = {}
-		total_courses = {}
-		total_price['total_price'] = 340
-		total_length['total_length'] = 340
-		total_courses['course_count'] = 5
-
-		data_json.append(total_price)
-		data_json.append(total_length)
-		data_json.append(total_courses)
+		data_json = add_plan_details(type='create')
 
 		#replace with i[0] not in (config list of unwanted fields)
 		fields = [i[0] for i in fields if i[0] != 'time_scraped']
@@ -79,6 +83,8 @@ def jsonify(data,fields,plan = None):
 					datum_json[field] = i[indx]
 			data_json.append(datum_json)
 			datum_json = {}
+
+		data_json = add_plan_details(data_json,type='populate')
 
 	return data_json
 

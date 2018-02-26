@@ -41,6 +41,7 @@ class Create_plan(Resource):
         combination_ids,combinations = inputs.fetch_tech_combinations(position)
         needed_skills,needed_skills_lvls = inputs.fetch_needed_skills(position,user_skills)
 
+        #to fetch the tech combination id for the plans
         i = 0
         for tech_skill_combo in combinations.values():
 
@@ -48,18 +49,19 @@ class Create_plan(Resource):
             courses_recomended = run_algorithm(courses,courseSkill_matrix,courseSkillLvl_matrix,prices,ratings,lengths,timeAllocation,budget,skills_needed,needed_skills_lvls)
             outputs = OR_outputs(courses_recomended)
             plan_json = outputs.fetch_course_details()
+            plan_id = plan.add(position,plan_json,combination_ids[i],needed_skills)
+            plan_json['plan_id'] = plan_id
             plans.append(plan_json)
-            plan.add(position,plan_json,combination_ids[i],needed_skills)
             i = i + 1
-            
+
         return plans
 
 class Plan_save(Resource):
-    # curl -i -H "Content-Type: application/json" -H "Accept:application/json" -X POST -d "{\"plan_id\":\"1\",\"user_id\":\"1\"}" http://127.0.0.1:5000/save_plan
+    # curl -i -H "Content-Type: application/json" -H "Accept:application/json" -X POST -d "{\"plan_id\":\"5\",\"user_id\":\"2\"}" http://127.0.0.1:5000/save_plan
     def post(self):
         plan_id = request.json['plan_id']
         user_id = request.json['user_id']
-        plan = Plans(plan_id,user_id)
+        plan = Plans(plan_id=plan_id,user_id=user_id)
         saved = plan.save()
         if saved == 1:
             return {'status':'success'}
@@ -71,7 +73,7 @@ class Plan_delete(Resource):
     def post(self):
         plan_id = request.json['plan_id']
         user_id = request.json['user_id']
-        plan = Plans(plan_id,user_id)
+        plan = Plans(plan_id=plan_id,user_id=user_id)
         deleted = plan.delete()
         if deleted == 1:
             return {'status':'success'}

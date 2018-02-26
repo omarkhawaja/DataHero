@@ -206,7 +206,7 @@ class Plans(object):
 		plan_price = plan_json[0]['total_price']
 		plan_length = plan_json[1]['total_length']
 		course_count = plan_json[2]['course_count']
-		courses = plan_json[3:]
+		courses = plan_json[4:]
 
 		try:
 			cur.execute('''insert into Plans (position_id,cost,length,number_courses,technical_skills_id) values ({},{},{},{},{});'''.format(position,plan_price,plan_length,course_count,combination))
@@ -221,6 +221,7 @@ class Plans(object):
 				cur.execute('''insert into Plan_skills (plan_id,skill_id) values ({},{});'''.format(plan,indx + 1))
 
 			conn.commit()
+			return plan
 
 		except Exception as e:
 			print(e)
@@ -239,6 +240,7 @@ class Plans(object):
 	def fetch(self):
 		plans = []
 		cur.execute('''select * from Plans where user_id = {};'''.format(self.user))
+		pass 
 
 if __name__ == '__main__':	
 	test = Positions('t')
