@@ -203,9 +203,9 @@ class Plans(object):
 
 	#look into what to do for error handling
 	def add(self,position,plan_json,combination,needed_skills):
-		plan_price = plan_json[0]
-		plan_length = plan_json[1]
-		course_count = plan_json[2]
+		plan_price = plan_json[0]['total_price']
+		plan_length = plan_json[1]['total_length']
+		course_count = plan_json[2]['course_count']
 		courses = plan_json[3:]
 
 		try:
