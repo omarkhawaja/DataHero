@@ -147,7 +147,7 @@ class OR_inputs(object):
 			query_result = cur.fetchall()
 			combinations_skills[combination] = [x[0] for x in query_result]
 
-		return combinations_skills
+		return combination,combinations_skills
 
 
 class OR_outputs(object):
@@ -186,7 +186,7 @@ class Positions(object):
 
 class Plans(object):
 
-	def __init__(self, user_id, plan_id):
+	def __init__(self, user_id=None, plan_id=None):
 		super(Plans, self).__init__()
 		self.user = user_id
 		self.plan = plan_id
@@ -196,9 +196,56 @@ class Plans(object):
 			cur.execute('''update Plans set user_id = {} where id = {};'''.format(self.user,self.plan))
 			conn.commit()
 			return 1
+
 		except:
 			conn.rollback()
 			return 0
+
+	#look into what to do for error handling
+	def add(self,position,plan_json,combination,needed_skills):
+		plan_price = plan_json[0]
+		plan_length = plan_json[1]
+		course_count = plan_json[2]
+		courses = plan_json[3:]
+
+		try:
+			cur.execute('''insert into Plans 
+						   position_id,cost,length,number_courses,technical_skills_id 
+						   values ({},{},{},{},{})'''
+						   .format(position,plan_price,plan_length,course_count,combination))
+			plan = cur.lastrowid
+
+			for course in courses:
+				cur.execute('''insert into Plan_courses 
+						   	   plan_id,course_id 
+						   	   values ({},{})'''
+						   	   .format(plan,course['id']))
+
+			#needed_skills is a binary list indicating if a skill is needed. The indx's in the list refer to the skill_id - 1.
+			for indx,skill in enumerate(needed_skills):
+				cur.execute('''insert into Plan_skills 
+			   	   			   plan_id,skill_id 
+			   	   			   values ({},{})'''
+			   				   .format(plan,indx + 1))
+
+			conn.commit()
+
+		except:
+			conn.rollback()
+
+	def delete(self):
+		try:
+			cur.execute('''update Plans set user_id = Null where id = {} and user_id = {};'''.format(self.plan,self.user))
+			conn.commit()
+			return 1
+
+		except:
+			conn.rollback()
+			return 0
+
+	def fetch(self):
+		cur.execute('''select * from Plans where user_id = {}'''.format(self.user))
+		pass
 
 if __name__ == '__main__':	
 	test = Positions('t')
