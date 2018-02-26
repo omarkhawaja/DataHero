@@ -247,7 +247,7 @@ class Skills(object):
 		self.skills = ','.join([str(i) for i in skills])
 
 	def get_names(self):
-		cur.execute('''select skill from Skills where skill_id in ({});'''.format(self.skills))
+		cur.execute('''select skill from Skills where id in ({});'''.format(self.skills))
 		query_result = cur.fetchall()
 		skill_names = [x[0] for x in query_result]
 		return skill_names
