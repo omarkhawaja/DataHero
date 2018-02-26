@@ -147,7 +147,7 @@ class OR_inputs(object):
 			query_result = cur.fetchall()
 			combinations_skills[combination] = [x[0] for x in query_result]
 
-		return combination,combinations_skills
+		return combination_ids,combinations_skills
 
 
 class OR_outputs(object):

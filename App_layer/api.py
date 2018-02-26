@@ -38,9 +38,10 @@ class Create_plan(Resource):
         courses,ratings,prices,lengths = inputs.fetch_courses()
         courseSkill_matrix = inputs.fetch_courseSkill_matrix(len(courses))
         courseSkillLvl_matrix = inputs.fetch_courseSkillLvls_matrix(len(courses))
-        combination_id,combinations = inputs.fetch_tech_combinations(position)
+        combination_ids,combinations = inputs.fetch_tech_combinations(position)
         needed_skills,needed_skills_lvls = inputs.fetch_needed_skills(position,user_skills)
 
+        i = 0
         for tech_skill_combo in combinations.values():
 
             skills_needed = add_tech_combo(needed_skills,tech_skill_combo)
@@ -48,8 +49,9 @@ class Create_plan(Resource):
             outputs = OR_outputs(courses_recomended)
             plan_json = outputs.fetch_course_details()
             plans.append(plan_json)
-            plan.add(position,plan_json,combination_id,needed_skills)
-
+            plan.add(position,plan_json,combination_ids[i],needed_skills)
+            i = i + 1
+            
         return plans
 
 class Plan_save(Resource):
