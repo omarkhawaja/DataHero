@@ -59,7 +59,7 @@ def jsonify(data,fields,plan = None):
 
 	if plan == None:
 		#replace with i[0] not in (config list of unwanted fields)
-		fields = [i[0] for i in fields if i[0] != 'time_scraped']
+		fields = [i[0] for i in fields if i[0] != 'time_scraped' and i[0] != 'time_stamp']
 		for i in data:
 			for indx,field in enumerate(fields):
 				if isinstance(i[indx],D):

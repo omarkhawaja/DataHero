@@ -33,5 +33,11 @@ Insert into Combination_skills (combination_id, skill_id) values (5,2);
 Insert into Combination_skills (combination_id, skill_id) values (5,8);
 
 Insert into Position_combinations (position_id, combination_id) values (2,3);
-Insert into Position_combinations (position_id, combination_id) values (2,4);
+Insert into Position_combinations (position_id, combination_id) values (2,5);
 ######################################################################################
+
+
+
+select * from Plans;
+
+select y.name from Plan_courses x inner join Courses y on x.course_id = y.id where plan_id = 4;

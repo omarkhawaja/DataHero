@@ -150,10 +150,14 @@ class OR_inputs(object):
 		return combination_ids,combinations_skills
 
 class OR_outputs(object):
-	def __init__(self, courses):
+	def __init__(self, courses, type = 'OR'):
 		super(OR_outputs, self).__init__()
 		#input is coming in this format --> ['382','415'] need to add +1
-		self.courses = [str(int(x) + 843) for x in courses]
+		if type == 'OR':
+			self.courses = [str(int(x) + 843) for x in courses]
+
+		elif type == 'user':
+			self.courses = [str(x) for x in courses]
 
 	def fetch_course_details(self):
 		cur.execute("""select x.id,x.name,x.price,x.rating,x.description,x.length,x.url,y.name as 'inst_name',y.rating as 'inst_rating'
@@ -238,8 +242,32 @@ class Plans(object):
 
 	def fetch(self):
 		plans = []
-		cur.execute('''select * from Plans where user_id = {};'''.format(self.user))
-		pass
+		try:
+			cur.execute('''select * from Plans where user_id = {};'''.format(self.user))
+			query_result = cur.fetchall()
+			plan_ids = [x[0] for x in query_result]
+		#needed?
+		except:
+			pass
+
+		for plan in plan_ids:
+			cur.execute('''select course_id from Plan_courses where plan_id = {};'''.format(plan))
+			query_result = cur.fetchall()
+			courses = [x[0] for x in query_result]
+			if len(courses) != 0:
+				output = OR_outputs(courses=courses,type='user')
+				cur_plan = output.fetch_course_details()
+				
+				cur.execute('''select y.skill_id from Plans x inner join Combination_skills y on x.technical_skills_id = y.combination_id where x.id = {};'''.format(plan))
+				query_result = cur.fetchall()
+				tech_skill_combo = [x[0] for x in query_result]
+
+				skills = Skills(tech_skill_combo)
+				cur_plan[0]['tech_combo'] = skills.get_names()
+				
+				plans.append(cur_plan)
+
+		return plans
 
 class Skills(object):
 	def __init__(self, skills):

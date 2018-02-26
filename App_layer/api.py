@@ -5,7 +5,7 @@ from flask_cors import CORS
 import json
 from decimal import Decimal as D
 
-from PythonModel import run_algorithm
+#from PythonModel import run_algorithm
 from db_interface import OR_inputs, OR_outputs, Positions, Plans, Skills
 from utils import add_tech_combo, parse_request, jsonify, parse_normal
 
@@ -52,7 +52,7 @@ class Create_plan(Resource):
             plan_id = plan.add(position,plan_json,combination_ids[i],needed_skills)
             
             plan_json[0]['plan_id'] = plan_id
-            
+
             skills = Skills(tech_skill_combo)
             plan_json[0]['tech_combo'] = skills.get_names()
             
@@ -88,8 +88,9 @@ class Plan_delete(Resource):
 class User_plans(Resource):
     def get(self,user_id):
         user = parse_normal(user_id)
-        plan = Plans(user_id=user)
-        return plan.fetch()
+        plans = Plans(user_id=user)
+        user_plans = plans.fetch()
+        return user_plans
 
 #Endpoints
 api.add_resource(Positions_list, '/positions')
