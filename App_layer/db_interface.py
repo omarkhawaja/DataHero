@@ -162,7 +162,8 @@ class OR_outputs(object):
 					where x.id in ({}) """.format(",".join(self.courses)))
 		all_details = cur.fetchall()
 		fields = cur.description
-		return all_details,fields
+		course_details = jsonify(all_details,fields,'plan')
+		return course_details
 
 class Positions(object):
 	def __init__(self, position):
@@ -182,6 +183,22 @@ class Positions(object):
 		fields = cur.description
 		position_skills = jsonify(query_result,fields)
 		return position_skills
+
+class Plans(object):
+
+	def __init__(self, user_id, plan_id):
+		super(Plans, self).__init__()
+		self.user = user_id
+		self.plan = plan_id
+
+	def save(self):
+		try:
+			cur.execute('''update Plans set user_id = {} where id = {};'''.format(self.user,self.plan))
+			conn.commit()
+			return 1
+		except:
+			conn.rollback()
+			return 0
 
 if __name__ == '__main__':	
 	test = Positions('t')

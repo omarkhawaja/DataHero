@@ -42,7 +42,7 @@ def jsonify(data,fields,plan = None):
 	datum_json = {}
 	data_json = []
 
-	if plan = None:
+	if plan == None:
 		#replace with i[0] not in (config list of unwanted fields)
 		fields = [i[0] for i in fields if i[0] != 'time_scraped']
 		for i in data:
