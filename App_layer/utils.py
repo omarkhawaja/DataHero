@@ -55,9 +55,9 @@ def add_plan_details(data_json=None,type='create'):
 		
 	elif type == 'populate':
 		courses = data_json[4:]
-		data_json['total_price'] = get_total_price([x['price'] for x in courses])
-		data_json['total_length'] = get_total_length([x['length'] for x in courses])
-		data_json['course_count'] = get_number_of_courses([x['id'] for x in courses])
+		data_json[0]['total_price'] = get_total_price([x['price'] for x in courses])
+		data_json[1]['total_length'] = get_total_length([int(x['length']) for x in courses])
+		data_json[2]['course_count'] = get_number_of_courses([x['id'] for x in courses])
 		return data_json
 
 def jsonify(data,fields,plan = None):

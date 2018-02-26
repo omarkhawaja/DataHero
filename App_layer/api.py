@@ -5,7 +5,7 @@ from flask_cors import CORS
 import json
 from decimal import Decimal as D
 
-#from PythonModel import run_algorithm
+from PythonModel import run_algorithm
 from db_interface import OR_inputs, OR_outputs, Positions, Plans
 from utils import add_tech_combo, parse_request, jsonify, parse_normal
 
@@ -50,7 +50,7 @@ class Create_plan(Resource):
             outputs = OR_outputs(courses_recomended)
             plan_json = outputs.fetch_course_details()
             plan_id = plan.add(position,plan_json,combination_ids[i],needed_skills)
-            plan_json['plan_id'] = plan_id
+            plan_json[3]['plan_id'] = plan_id
             plans.append(plan_json)
             i = i + 1
 
