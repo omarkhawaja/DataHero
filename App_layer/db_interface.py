@@ -209,16 +209,16 @@ class Plans(object):
 		courses = plan_json[3:]
 
 		try:
-			cur.execute('''insert into Plans position_id,cost,length,number_courses,technical_skills_id values ({},{},{},{},{});'''.format(position,plan_price,plan_length,course_count,combination))
+			cur.execute('''insert into Plans (position_id,cost,length,number_courses,technical_skills_id) values ({},{},{},{},{});'''.format(position,plan_price,plan_length,course_count,combination))
 			plan = cur.lastrowid
 			print(plan)
 
 			for course in courses:
-				cur.execute('''insert into Plan_courses plan_id,course_id values ({},{});'''.format(plan,course['id']))
+				cur.execute('''insert into Plan_courses (plan_id,course_id) values ({},{});'''.format(plan,course['id']))
 
 			#needed_skills is a binary list indicating if a skill is needed. The indx's in the list refer to the skill_id - 1.
 			for indx,skill in enumerate(needed_skills):
-				cur.execute('''insert into Plan_skills plan_id,skill_id values ({},{});'''.format(plan,indx + 1))
+				cur.execute('''insert into Plan_skills (plan_id,skill_id) values ({},{});'''.format(plan,indx + 1))
 
 			conn.commit()
 
