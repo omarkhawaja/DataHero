@@ -26,17 +26,20 @@ def parse_normal(request_string):
 	else:
 		return None
 
-def get_total_price():
-	pass
+def get_total_price(prices):
+	total_price = sum(prices)
 
-def get_total_length():
-	pass
+def get_total_length(lengths):
+	total_time = sum(lengths)
 
-def get_number_of_courses():
-	pass
+def get_number_of_courses(courses):
+	total_courses = len(courses)
 
-def add_plan_details():
-	pass
+def add_plan_details(data_json,data):
+	data_json['total_price'] = get_total_price()
+	data_json['total_length'] = get_total_length()
+	data_json['course_count'] = get_number_of_courses()
+	retrn(data_json)
 
 def jsonify(data,fields,plan = None):
 	datum_json = {}

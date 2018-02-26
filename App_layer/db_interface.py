@@ -214,6 +214,7 @@ class Plans(object):
 						   values ({},{},{},{},{})'''
 						   .format(position,plan_price,plan_length,course_count,combination))
 			plan = cur.lastrowid
+			print(plan)
 
 			for course in courses:
 				cur.execute('''insert into Plan_courses 
@@ -230,7 +231,8 @@ class Plans(object):
 
 			conn.commit()
 
-		except:
+		except Exception as e:
+			print(e)
 			conn.rollback()
 
 	def delete(self):
@@ -244,8 +246,8 @@ class Plans(object):
 			return 0
 
 	def fetch(self):
+		plans = []
 		cur.execute('''select * from Plans where user_id = {}'''.format(self.user))
-		pass
 
 if __name__ == '__main__':	
 	test = Positions('t')

@@ -79,9 +79,10 @@ class Plan_delete(Resource):
 class User_plans(Resource):
     def get(self,user_id):
         user = parse_normal(user_id)
-        
-            
-        
+        plan = Plans(user_id=user)
+        return plan.fetch()
+
+#Endpoints
 api.add_resource(Positions_list, '/positions')
 api.add_resource(Position_skills, '/positions/skills/<position_id>')
 api.add_resource(Create_plan, '/create_plan/<skills_needed_string>')
