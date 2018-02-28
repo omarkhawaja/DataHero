@@ -138,7 +138,7 @@ class OR_inputs(object):
 
 	def fetch_tech_combinations(self,position):
 		combinations_skills = {}
-		cur.execute('''select combination_id from Position_combinations where position_id = {};'''.format(2))
+		cur.execute('''select combination_id from Position_combinations where position_id = {};'''.format(int(position)))
 		query_result = cur.fetchall()
 		combination_ids = [x[0] for x in query_result]
 
@@ -166,7 +166,10 @@ class OR_outputs(object):
 class Positions(object):
 	def __init__(self, position):
 		super(Positions, self).__init__()
-		self.position = position
+		if position != None:
+			self.position = int(position)
+		else:
+			self.position = position
 
 	def fetch_positions(self):
 		cur.execute('''select * from Positions;''')

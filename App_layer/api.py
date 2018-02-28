@@ -56,8 +56,8 @@ class Create_plan(Resource):
             skills = Skills(tech_skill_combo)
             plan_json[0]['tech_combo'] = skills.get_names()
 
-            position = Positions(position)
-            plan_json[0]['position'] = position.get_name()
+            position_id = Positions(position)
+            plan_json[0]['position'] = position_id.get_name()
             
             plans.append(plan_json)
             i = i + 1
