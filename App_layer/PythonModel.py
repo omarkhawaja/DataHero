@@ -50,6 +50,7 @@ def run_algorithm(courses,courseSkills,courseLevel,cost,ratings,lengths,timeAllo
 
     #model is infeasible
     except AttributeError:
+        courses_recomended = []
         budget = budget + 5
         courses_recomended = run_algorithm(courses,courseSkills,courseLevel,cost,ratings,lengths,timeAllocation,budget,neededSkills,skillLvl_needed)
         return 1,courses_recomended
