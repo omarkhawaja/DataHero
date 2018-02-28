@@ -43,7 +43,7 @@ def run_algorithm(courses,courseSkills,courseLevel,cost,ratings,lengths,timeAllo
         for v in m.getVars():
             if v.x > 0:
                 courses_recomended.append(courses[int(v.varName.split("x",1)[1])]) #x386
-        return courses_recomended
+        return 0,courses_recomended
 
     except GurobiError as e:
         print('Error code ' + str(e.errno) + ": " + str(e))
@@ -52,7 +52,7 @@ def run_algorithm(courses,courseSkills,courseLevel,cost,ratings,lengths,timeAllo
     except AttributeError:
         budget = budget + 5
         courses_recomended = run_algorithm(courses,courseSkills,courseLevel,cost,ratings,lengths,timeAllocation,budget,neededSkills,skillLvl_needed)
-        return courses_recomended
+        return 1,courses_recomended
 
 if __name__ == "__main__":
     pass
