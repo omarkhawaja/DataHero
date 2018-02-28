@@ -182,6 +182,12 @@ class Positions(object):
 		position_skills = jsonify(query_result,fields)
 		return position_skills
 
+	def get_name(self):
+		cur.execute('''select distinct(y.position) from Plans x inner join Positions y on x.position_id = y.id and y.id = {};'''.format(self.position))
+		query_result = cur.fetchall()
+		position_name = query_result[0][0]
+		return position_name
+
 class Plans(object):
 
 	def __init__(self, user_id=None, plan_id=None):
@@ -243,11 +249,12 @@ class Plans(object):
 			query_result = cur.fetchall()
 			plan_ids = [x[0] for x in query_result]
 			time_stamps = [x[7] for x in query_result]
+			position_ids = [x[2] for x in query_result]
 		#needed?
 		except:
 			pass
 
-		for plan,time_stamp in zip(plan_ids,time_stamps):
+		for plan,time_stamp,position_id in zip(plan_ids,time_stamps,position_ids):
 			cur.execute('''select course_id from Plan_courses where plan_id = {};'''.format(plan))
 			query_result = cur.fetchall()
 			courses = [x[0] for x in query_result]
@@ -259,10 +266,15 @@ class Plans(object):
 				query_result = cur.fetchall()
 				tech_skill_combo = [x[0] for x in query_result]
 
+				cur_plan[0]['plan_id'] = plan
+
 				skills = Skills(tech_skill_combo)
 				cur_plan[0]['tech_combo'] = skills.get_names()
 
 				cur_plan[0]['time_stamp'] = str(time_stamp)
+
+				position = Positions(position_id)
+				cur_plan[0]['position'] = position.get_name()
 				
 				plans.append(cur_plan)
 
