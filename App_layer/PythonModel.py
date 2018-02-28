@@ -35,7 +35,6 @@ def run_algorithm(courses,courseSkills,courseLevel,cost,ratings,lengths,timeAllo
         #Output
         for v in m.getVars():
             if v.x > 0:
-                #courses_recomended.append(v.varName.split("x",1)[1]) #x386
                 courses_recomended.append(courses[int(v.varName.split("x",1)[1])]) #x386
         return courses_recomended
 
