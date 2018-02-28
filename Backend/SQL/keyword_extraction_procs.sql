@@ -14,6 +14,21 @@ END$$
 DELIMITER ;
 
 DELIMITER $$
+DROP FUNCTION IF EXISTS keyword_search_regex$$
+CREATE FUNCTION keyword_search_regex(keyword VARCHAR(100), txt_to_search TEXT) RETURNS VARCHAR(1)
+BEGIN
+  DECLARE keyword_found VARCHAR(1);
+  
+	select CASE count(*) WHEN 0 THEN 'N' ELSE 'Y' END into keyword_found
+	from fydp.Keywords k
+	where k.skill = keyword
+	and   lower(txt_to_search) regexp lower(concat('[[:<:]]',k.skill,'[[:>:]]'));
+    
+  RETURN keyword_found;
+END$$
+DELIMITER ;
+
+DELIMITER $$
 DROP FUNCTION IF EXISTS check_skill$$
 CREATE FUNCTION check_skill(skill_name VARCHAR(100), skill_type VARCHAR(100)) RETURNS INTEGER
 BEGIN
@@ -90,7 +105,7 @@ BEGIN
 		LEAVE get_keywords;
 		END IF;
         
-		select keyword_search(keyword_txt,description) from dual into key_found;
+		select keyword_search_regex(keyword_txt,description) from dual into key_found;
 		IF key_found = 'Y' THEN
         select check_skill(keyword_txt,keyword_type) from dual into skill_id_num;
 		INSERT INTO Course_skills(course_id,skill_id,skill_lvl) VALUES (id_num,skill_id_num,course_lvl);

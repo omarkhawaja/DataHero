@@ -35,14 +35,16 @@ def run_algorithm(courses,courseSkills,courseLevel,cost,ratings,lengths,timeAllo
         #Output
         for v in m.getVars():
             if v.x > 0:
-                courses_recomended.append(v.varName.split("x",1)[1]) #x386
+                #courses_recomended.append(v.varName.split("x",1)[1]) #x386
+                courses_recomended.append(courses[int(v.varName.split("x",1)[1])]) #x386
         return courses_recomended
 
     except GurobiError as e:
         print('Error code ' + str(e.errno) + ": " + str(e))
 
+    #model is infeasible
     except AttributeError:
-        print('Encountered an attribute error')
+        run_algorithm(budget = budget + 5)
 
 
 if __name__ == "__main__":

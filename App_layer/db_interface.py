@@ -154,7 +154,8 @@ class OR_outputs(object):
 		super(OR_outputs, self).__init__()
 		#input is coming in this format --> ['382','415'] need to add +1
 		if type == 'OR':
-			self.courses = [str(int(x) + 843) for x in courses]
+			#self.courses = [str(int(x) + 843) for x in courses]
+			self.courses = [str(x) for x in courses]
 
 		elif type == 'user':
 			self.courses = [str(x) for x in courses]
@@ -181,7 +182,7 @@ class Positions(object):
 		return positions
 
 	def fetch_position_skills(self):
-		cur.execute('''select * from Skills where id IS NOT NULL AND id IN (select skill_id from Position_skills where position_id = {});'''.format(self.position))
+		cur.execute('''select x.* from Skills x inner join Position_skills y on x.id = y.skill_id and y.position_id = {});'''.format(self.position))
 		query_result = cur.fetchall()
 		fields = cur.description
 		position_skills = jsonify(query_result,fields)
@@ -282,6 +283,4 @@ class Skills(object):
 		return skill_names
 		
 if __name__ == '__main__':	
-	test = Positions('t')
-	a = test.fetch_positions()
-	print(a)
+	pass

@@ -22,18 +22,18 @@ Insert into Technical_combinations (name, description) values ('test combo 2','h
 Insert into Technical_combinations (name, description) values ('test combo 3','scala and hadoop');
 Insert into Technical_combinations (name, description) values ('test combo 4','python, sql, and R');
 
-Insert into Combination_skills (combination_id, skill_id) values (1,8);
+Insert into Combination_skills (combination_id, skill_id) values (1,7);
 Insert into Combination_skills (combination_id, skill_id) values (1,2);
-Insert into Combination_skills (combination_id, skill_id) values (2,16);
-Insert into Combination_skills (combination_id, skill_id) values (2,20);
-Insert into Combination_skills (combination_id, skill_id) values (3,11);
-Insert into Combination_skills (combination_id, skill_id) values (3,12);
-Insert into Combination_skills (combination_id, skill_id) values (5,1);
-Insert into Combination_skills (combination_id, skill_id) values (5,2);
-Insert into Combination_skills (combination_id, skill_id) values (5,8);
+Insert into Combination_skills (combination_id, skill_id) values (2,15);
+Insert into Combination_skills (combination_id, skill_id) values (2,19);
+Insert into Combination_skills (combination_id, skill_id) values (3,7);
+Insert into Combination_skills (combination_id, skill_id) values (3,13);
+Insert into Combination_skills (combination_id, skill_id) values (4,1);
+Insert into Combination_skills (combination_id, skill_id) values (4,2);
+Insert into Combination_skills (combination_id, skill_id) values (4,7);
 
 Insert into Position_combinations (position_id, combination_id) values (2,3);
-Insert into Position_combinations (position_id, combination_id) values (2,5);
+Insert into Position_combinations (position_id, combination_id) values (2,4);
 ######################################################################################
 
 
@@ -41,3 +41,18 @@ Insert into Position_combinations (position_id, combination_id) values (2,5);
 select * from Plans;
 
 select y.name from Plan_courses x inner join Courses y on x.course_id = y.id where plan_id = 4;
+
+select x.id, x.number_courses, z.`name` from Plans x inner join Plan_courses y on x.id = y.plan_id and x.user_id = 3 inner join Courses z on y.course_id = z.id;
+
+drop table Course_skills;
+drop table Combination_skills;
+drop table Position_skills;
+drop table Plan_skills;
+drop table Skills;
+drop table Plan_courses;
+drop table Plans;
+drop table Position_combinations;
+drop table Technical_combinations;
+
+select * from Skills;
+call test2();
