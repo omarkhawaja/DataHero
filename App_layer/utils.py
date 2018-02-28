@@ -35,7 +35,7 @@ def clean_edx_prices(prices):
 
 def get_total_price(prices):
 	cleaned_prices = clean_edx_prices(prices)
-	total_price = sum()
+	total_price = sum(cleaned_prices)
 	return total_price
 
 def get_total_length(lengths):
