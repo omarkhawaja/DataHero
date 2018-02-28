@@ -2,6 +2,9 @@ from gurobipy import *
 
 def run_algorithm(courses,courseSkills,courseLevel,cost,ratings,lengths,timeAllocation,budget,neededSkills,skillLvl_needed):
     try:
+        #normalized_denominator = sum([(x*y) for x,y in zip(cost,lengths)])
+        #normalized_cost_and_length_score = [((x*y)/normalized_denominator) for x,y in zip(cost,lengths)]
+
         # Create a new model
         m = Model()
 
@@ -13,9 +16,13 @@ def run_algorithm(courses,courseSkills,courseLevel,cost,ratings,lengths,timeAllo
         for i in range(numCourses):
             x[i] = m.addVar(vtype=GRB.BINARY, name="x%d" % i)
 
+        #norm_score = [sum(x*y) for x,y in zip(cost,lengths)]
+        #print(norm_score)
+
         m.update()
         # Set Objective Function
-        m.setObjective(quicksum((x[i] * ratings[i])  for i in range(numCourses)), GRB.MINIMIZE)
+        #m.setObjective(quicksum((x[i] * normalized_cost_and_length_score[i])  for i in range(numCourses)), GRB.MINIMIZE)
+        m.setObjective(quicksum((x[i] * cost[i])  for i in range(numCourses)), GRB.MINIMIZE)
         # Set Partitioning Constraints / Modified to only work with "neededSkills"
         for s in range(numSkills):
             m.addConstr(quicksum(x[i] * courseSkills[i][s] for i in range(numCourses)) >= neededSkills[s])
