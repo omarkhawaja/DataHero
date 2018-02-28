@@ -182,7 +182,7 @@ class Positions(object):
 		return positions
 
 	def fetch_position_skills(self):
-		cur.execute('''select x.* from Skills x inner join Position_skills y on x.id = y.skill_id and y.position_id = {});'''.format(self.position))
+		cur.execute('''select x.* from Skills x inner join Position_skills y on x.id = y.skill_id and y.position_id = {};'''.format(self.position))
 		query_result = cur.fetchall()
 		fields = cur.description
 		position_skills = jsonify(query_result,fields)
