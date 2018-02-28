@@ -2,6 +2,7 @@ from gurobipy import *
 
 def run_algorithm(courses,courseSkills,courseLevel,cost,ratings,lengths,timeAllocation,budget,neededSkills,skillLvl_needed):
     try:
+        relaxed = 0
         #normalized_denominator = sum([(x*y) for x,y in zip(cost,lengths)])
         #normalized_cost_and_length_score = [((x*y)/normalized_denominator) for x,y in zip(cost,lengths)]
 
@@ -43,17 +44,17 @@ def run_algorithm(courses,courseSkills,courseLevel,cost,ratings,lengths,timeAllo
         for v in m.getVars():
             if v.x > 0:
                 courses_recomended.append(courses[int(v.varName.split("x",1)[1])]) #x386
-        return 0,courses_recomended
+        return relaxed,courses_recomended
 
     except GurobiError as e:
         print('Error code ' + str(e.errno) + ": " + str(e))
 
     #model is infeasible
     except AttributeError:
-        courses_recomended = []
+        relaxed = 1
         budget = budget + 5
-        courses_recomended = run_algorithm(courses,courseSkills,courseLevel,cost,ratings,lengths,timeAllocation,budget,neededSkills,skillLvl_needed)
-        return 1,courses_recomended
+        courses = run_algorithm(courses,courseSkills,courseLevel,cost,ratings,lengths,timeAllocation,budget,neededSkills,skillLvl_needed)
+        return relaxed,courses_recomended
 
 if __name__ == "__main__":
     pass
