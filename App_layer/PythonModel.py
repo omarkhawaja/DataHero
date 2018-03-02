@@ -32,9 +32,9 @@ def run_algorithm(courses,courseSkills,courseLevel,cost,ratings,lengths,timeAllo
             m.addConstr(quicksum(x[i] * courseLevel[i][s] for i in range(numCourses)) >= skillLvl_needed[s])
 
         # Budget Constraint
-        m.addConstr(quicksum(cost[i]*x[i] for i in range(numCourses)) <= budget)
+        m.addConstr(quicksum(cost[i]*x[i] for i in range(numCourses)) <= budget, "Budget")
         # Time Allocation Constraint:
-        m.addConstr(quicksum(lengths[i]*x[i] for i in range(numCourses))<= timeAllocation)
+        m.addConstr(quicksum(lengths[i]*x[i] for i in range(numCourses))<= timeAllocation, "Time")
         # Run Model
         m.optimize()
 
@@ -53,8 +53,22 @@ def run_algorithm(courses,courseSkills,courseLevel,cost,ratings,lengths,timeAllo
     #model is infeasible
     except AttributeError:
         relaxed = 1
-        budget = budget + 5
-        x,y = run_algorithm(courses,courseSkills,courseLevel,cost,ratings,lengths,timeAllocation,budget,neededSkills,skillLvl_needed)
+        if m.status == GRB.Status.INFEASIBLE:
+            print("Model is infeasible. Calculating IIS..")
+            m.computeIIS()
+            for c in m.getConstrs():
+                if c.constrName == "Budget":
+                    print('Increased Budget Constraint by 25. re-running alogirthm..')
+                    budget = budget + 25
+                    x,y = run_algorithm(courses,courseSkills,courseLevel,cost,ratings,lengths,timeAllocation,budget,neededSkills,skillLvl_needed)
+                    break
+                elif c.constrName == "Time":
+                    print('Increased Time Allocation Constraint by 25. re-running alogirthm..')
+                    timeAllocation = timeAllocation + 25
+                    x,y = run_algorithm(courses,courseSkills,courseLevel,cost,ratings,lengths,timeAllocation,budget,neededSkills,skillLvl_needed)
+                    break
+        #budget = budget + 5
+        #x,y = run_algorithm(courses,courseSkills,courseLevel,cost,ratings,lengths,timeAllocation,budget,neededSkills,skillLvl_needed)
         return relaxed,y
         
 if __name__ == "__main__":
