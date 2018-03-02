@@ -2,13 +2,10 @@
 
     include ("login.php");
     include ("BootstrapCDN.php");
-	include ("connection.php") ;
     include ("navBar.php");
 
-    
     if (is_null($_SESSION['id'])) header("Location:index.php") ;
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,7 +15,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Data Hero - Generate New Plan</title>
-
     <style>
         .navbar-brand {
             font-size: 1.8em;
@@ -39,48 +35,44 @@
         table.borderless th {
             border: none !important;
         }
-
-        #hide {
-            display: none;
+        
+       .center {
+            text-align: center;
         }
+        
     </style>
 </head>
 
 <body data-spy="scroll" data-target=".navbar-collapse">
-
     <div class="container contentContainer" id="topContainer">
         <div class="row">
-            <div class="col-md-6 col-md-offset-1" id="topRow">
+            <div class="col-md-4 col-md-offset-2" id="topRow">
                 <h2>Generate a new plan:</h2>
             </div>
         </div>
-
-
         <div class="row">
-            <div class="col-md-6 col-md-offset-2" id="secondRow">
-
+            <div class="col-md-6 col-md-offset-3" >
                 <form method="POST" id="inputForm" action="output.php">
                     <div class="form-group">
                         <label><h3>Select Career Path:</h3></label>
 
                         <select required class=" form-control" id="jobTitle" name="position" onchange="UpdateSkills()">
-                            <option disabled selected>Select position</option>  
-                            <?php    
-                            $query = "SELECT * FROM Positions" ;
-                            $result = mysqli_query($link,$query) ;	
-                            if (mysqli_num_rows($result) > 0) 
+                            <option disabled selected>Select Position</option>  
+                            <?php  
+                            $endpoints = "positions" ;
+                            $positions = GET_API_Request($endpoints);
+	
+                            if (count($positions) > 0) 
                             {
-                                while($positions = mysqli_fetch_assoc($result))
+                                for ($i=0 ; $i < count($positions) ; $i++)
                                 {
-                                    echo('<option value ="'.$positions['id'].'" >'.$positions["position"].'</option>');
+                                    echo('<option value ="'.$positions[$i]['id'].'" >'.$positions[$i]['position'].'</option>');
                                 }
                             }
                             ?>
                         </select>
                     </div>
-
                     <script type="text/javascript">
-                        //Write JS script to output relevant skills based on "jobTitle" selection: onchange="UpdateSkills()
 
                         var changeOccured = false;
 
@@ -113,63 +105,64 @@
                             }
                         }
                     </script>
-
                     <br/>
 
                     <!-- table body to be printed via php script: loop with table rows-->
                     <?php    
-                    $query = "SELECT * FROM Positions" ;
-                    $result = mysqli_query($link,$query) ;	
-                    if (mysqli_num_rows($result) > 0) 
+                    
+                    if (count($positions) > 0) 
                     {   
-                        while($positions = mysqli_fetch_assoc($result))
+                        for ($i=0 ; $i < count($positions) ; $i++)
                         {
                     ?>
-                    <div style="display:none;" class="form-group" id="<?php echo($positions['position']);?> Skills">
-                        <table class="table" id="<?php echo($positions['position']);?>Skills">
+                    <div style="display:none;" class="form-group" id="<?php echo($positions[$i]['position']);?> Skills">
+                        
+                        <p><b>Naive/Basic Level:</b> You have very basic knowledge or understanding of the techniques and concepts involved with the skill. You are expected to need help when performing this skill.</p>
+                        <p><b>Intermediate Level:</b> You have very basic knowledge or understanding of the techniques and concepts involved with the skill. You are expected to need help when performing this skill.</p>
+                        <p><b>Advanced Level:</b> You have very basic knowledge or understanding of the techniques and concepts involved with the skill. You are expected to need help when performing this skill.</p>
+                        <label><h3>Skills Levels:</h3></label>
+                        <table class="table" id="<?php echo($positions[$i]['position']);?>Skills">
                             <thead>
                                 <tr>
-                                    <th scope="col">Skill</th>
-                                    <th scope="col">Current Level</th>
+                                    <th scope="col">Skill:</th>
+                                    <th scope="col">Your Current Level:</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php
-                    $query2 = "SELECT * FROM `Skills` WHERE `id` IS NOT NULL AND `id` IN 
-                    (SELECT `skill_id` FROM `Position_skills` WHERE `position_id` = ".$positions['id'].");";
-                    $result2 = mysqli_query($link,$query2) ;
-                    if (mysqli_num_rows($result2) > 0) 
+                    <?php
+                    $endpoint = "positions/skills/position_id=".$positions[$i]['id'] ;
+                    $position_skills = GET_API_Request($endpoint);
+
+                    if (count($position_skills) > 0) 
                     {
-                        while($skills = mysqli_fetch_assoc($result2))
+                        for ($j=0 ; $j < count($position_skills) ; $j++)
                         {
                             ?>
-                                    <tr>
-                                        <div class="form-group" name="<?php echo($skills['skill']);?>">
-                                            <td>
-                                                <label class="radio-inline"><?php echo(ucwords($skills['skill']));?></label>
-                                            </td>
-                                            <td>
-                                                <label class="radio-inline">
-                        <input required type="radio" name="<?php echo($skills['id']);?>" value = "1">Needed
-                        </label>
-
-                                                <label class="radio-inline">
-                        <input type="radio" name="<?php echo($skills['id']);?>" value = "2">Beginner
-                        </label>
-
-                                                <label class="radio-inline">
-                        <input type="radio" name="<?php echo($skills['id']);?>" value = "3">Advanced
-                        </label>
-                                            </td>
-                                        </div>
-                                    </tr>
-
-                                    <?php
+                                <tr>
+                                    <div class="form-group" name="<?php echo($position_skills[$j]['skill']);?>">
+                                        <td>
+                                            <label class="radio-inline"><?php echo(ucwords($position_skills[$j]['skill']));?></label>
+                                        </td>
+                                        <td>
+                                            <label class="radio-inline">
+                                                        <input  type="radio" name="<?php echo($position_skills[$j]['id']);?>" value = "1">Naive/Basic
+                                                        </label>
+                                            <label class="radio-inline">
+                                                        <input type="radio" name="<?php echo($position_skills[$j]['id']);?>" value = "2">Intermediate
+                                                        </label>
+                                            <label class="radio-inline">
+                                                        <input type="radio" name="<?php echo($position_skills[$j]['id']);?>" value = "3">Advanced
+                                                        </label>
+                                        </td>
+                                    </div>
+                                </tr>
+                    <?php
                         }
                     }
                     ?>
                             </tbody>
                         </table>
+                        
                         <hr>
                     </div>
                     <?php
@@ -177,27 +170,22 @@
                     }
                     ?>
                         <!-- table body to be printed via php script: loop with table rows-->
-
                         <div class="form-group">
-
-                            <label class="large" for="budget"><h3>Plan Budget</h3></label>
-                            <input id="budget" name="budget" type="number" class="form-control" required>
-                            <p>Plan budget description goes here! </p>
+                            <label class="large" for="budget"><h3>Plan Budget:</h3></label>
+                            <input id="budget" name="budget" type="number" class="form-control" required min="220" placeholder="">
+                            <br/>
+                            <p>Plan budget represents the <b>total amount</b> you are allocating for acquiring the skills  you need for the career path you are generating a plan for.
+                            Please note that most of the courses we recommend have a free option if you don't require a course certificate. In those cases, the price of course certificate is being considered as the price for taking that course.</p>
                             <hr>
-
                         </div>
-
                         <div class="form-group">
-
-                            <h3>Time Allocation</h3>
-                            <label class="large" for="length"><h4>Total time available to work on plan in hours:</h4></label>
-                            <input type="number" class="form-control" id="length" name="length" required>
-                            <p>Time Allocation description1 goes here </p>
-
+                            <label class="large" for="length"><h3>Plan Time Allocation:</h3></label>
+                            <input type="number" class="form-control" id="length" name="length" required min = "220">
+                            <br/>
+                            <p>Plan time allocation represents the <b>total number of hours</b> you are willing to spend on the courses of the plan being generated.</p>
 <!--                            <label class="large" for="budget"><h4>Hours available per week to work on plan:</h4></label>
                             <input type="number" class="form-control" id="hours" name="hours">
                             <p>Time Allocation description2 goes here </p>-->
-
                             <hr>
                         </div>
 
@@ -205,46 +193,36 @@
 
                         </div>
 
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary btn-lg" >Generate New Plan</button>
+                        <div class="center form-group">
+                            <button type="submit" class="btn btn-primary btn-lg" > Generate Plans </button>
                         </div>
                 </form>
 
             </div>
         </div>
     </div>
-
 </body>
-
 
 <!--<script type="text/javascript">
 /*
     function inputsArray() {
-
         var inputObjs = document.getElementsByTagName('input');
         var skills = inputObjs.map(function(el){
             return el.value;
 }).join(',');
         alert(skills) ;
-        
         var skills =  [].slice.call(inputObjs);
         alert(skills) ;
         console.log(inputObjs);
         for (var i = 0; i < inputObjs.length; ++i) {
             skills.append(inputObjs[i].value);
             alert(skills);
-
         }
         alert(skills);
     }
 */
-
-
-
-      
         var xmlhttp = new XMLHttpRequest();
         var url = 'http://127.0.0.1:5000/create_plan/15';
-
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 var myArr = JSON.parse(this.responseText);
@@ -252,11 +230,8 @@
                 myFunction(myArr);
             }
         };
-
-        
         xmlhttp.open("GET", url, true);
         xmlhttp.send();
-
         function myFunction(arr) {
             var out = "";
             var i;
@@ -267,5 +242,4 @@
             document.getElementById("id01").innerHTML = out;
         }
 </script>-->
-
 </html>

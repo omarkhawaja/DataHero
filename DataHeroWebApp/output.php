@@ -1,6 +1,5 @@
 <?php 
     include ("login.php");
-	include ("connection.php");
     include ("navBar.php");
 
     if (is_null($_SESSION['id'] )) header("Location:index.php") ;
@@ -24,18 +23,20 @@ for ($i= 0; $i <= 100; $i++) {
 $skills = rtrim($skills, ',');
 $levels = rtrim($levels, ',');
 
-
 $inputs = "create_plan/".$position.'&'.$budget.'&'.$length.'&'.$skills.'&'.$levels ;
-
 $apiURL .=$inputs;
-
 
 $response = file_get_contents($apiURL);
 $response = json_decode($response,true);
 $_SESSION['plans'] = $response;
+$relaxed = $response[0][0]['relaxed'] ;
+
+if ($relaxed == 1)
+{
+    $message = '<div style ="width:600px;" class = "center alert alert-danger"><p>Constraint relaxation detected! - We could not satisfy your requirments as inputted. Therefore, the plan budget or time allocation requirements were relaxed until all required skills were satisfied</p></div>' ;
+}
 
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -71,24 +72,31 @@ $_SESSION['plans'] = $response;
                 <h1>We have generated the following plans for you:</h1>
             </div>
         </div>
+        <div class="row">
+            <div class = "col  col-md-offset-3">
+                <?php 
+                    echo $message;
+                ?> 
+            </div>
+        </div>
 
         <div class="row">
-            <div class="col-md-6 col-md-offset-2" id="SecondRow">
+            <div class="col-md-6 col-md-offset-1" id="SecondRow">
                 <h2> Suggested Plans: </h2>
                 <br/>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-md-8 col-md-offset-2" id="ThirdRow">
+            <div class="col-md-10 col-md-offset-1" id="ThirdRow">
                 <table class="table">
                     <thead class="thead-dark">
                         <tr>
                             <th scope="col">Plan</th>
                             <th scope="col">Course Count</th>
                             <th scope="col">Technologies Covered</th>
-                            <th scope="col">Cost</th>
-                            <th scope="col">Time Required</th>
+                            <th scope="col">Total Cost</th>
+                            <th scope="col">Time Commitment (Hrs)</th>
                             <th scope="col"></th>
                         </tr>
                     </thead>
@@ -101,19 +109,23 @@ $_SESSION['plans'] = $response;
                 $planID = 0;
                 foreach ($_SESSION['plans'] as $plan)
                 {
+                    $course_count = $plan[0]['course_count'] ;
+                    $tech_covered = ucwords(implode(", ", $plan[0]['tech_combo']));
+                    $total_price  = $plan[0]['total_price'];
+                    $total_length = $plan[0]['total_length'] ;
                     
-        ?>
+                        ?>
                             <tr>
                                 <th scope="row">
-                                    <?php echo("Plan".$planID); ?> </th>
+                                    <?php echo("Plan ".($planID + 1)); ?> </th>
                                 <td class="center">
-                                    <?php print_r($plan[2]['course_count']); ?> </td>
+                                    <?php echo($course_count); ?></td>
                                 <td class="center">
-                                    <?php print_r($plan[0]['total_price']); ?> </td>
+                                    <?php echo($tech_covered); ?></td>
                                 <td class="center">
-                                    <?php print_r($plan[1]['total_length']); ?> </td>
+                                    <?php echo($total_price); ?> </td>
                                 <td class="center">
-                                    <?php print_r($plan[1]['total_length']); ?> </td>
+                                    <?php echo($total_length); ?> </td>
 
                                 <td>
                                     <form  target="_blank" action="viewplan.php" method="POST">
@@ -139,6 +151,7 @@ $_SESSION['plans'] = $response;
                     </tbody>
                 </table>
             </div>
+            <br/><br/>
         </div>
     </div>
 </body>

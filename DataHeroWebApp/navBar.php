@@ -25,7 +25,7 @@ include ("BootstrapCDN.php");
             </div>
 
             <div class="navbar-header pull-left">
-                <a href="" class="navbar-brand">Data Hero</a>
+                <a href="main.php" class="navbar-brand">Data Hero</a>
             </div>
 
             <div class="collapse navbar-collapse">

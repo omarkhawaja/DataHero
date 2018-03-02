@@ -1,9 +1,15 @@
 <?php 
     include ("login.php");
-	include ("connection.php");
     include ("navBar.php");
 
     if (is_null($_SESSION['id'] )) header("Location:index.php") ;
+
+    $_SESSION['user_plans'] = "";
+    $user_plans_ep = "plans/user/id=".$_SESSION['id'] ;
+    $response = GET_API_Request($user_plans_ep) ;
+    $_SESSION['user_plans'] = $response;
+
+
 ?>
 	<!DOCTYPE html>
 	<html lang="en">
@@ -72,57 +78,60 @@
             </div>
             
             <div  class = "row">
-                <div class="col-md-6 col-md-offset-2" id="SecondRow">
+                <div class="col-md-8 col-md-offset-2" id="SecondRow">
                     <h2> My Plans: </h2>
                     <br/>
                 </div>
 			</div>
             
              <div class = "row">
-                <div class="col-md-6 col-md-offset-2" id="ThirdRow">
-                    <table class="table">
-                    <thead>
+                 <div class="col-md-8 col-md-offset-2" id="ThirdRow">
+                <table class="table">
+                    <thead class="thead-dark">
                         <tr>
-                          <th scope="col">Job Title</th>
-                          <th scope="col">Date Generated</th>
-                          <th scope="col"></th>
-                          <th scope="col"></th>
+                            <th  scope="col">Plan</th>
+                            <th class = "center" scope="col">Position</th>
+                            <th class = "center" scope="col">Technologies Covered</th>
+                            <th  class = "center" scope="col">Creation Date</th>
+                            <th class = "right" scope="col"></th>
                         </tr>
                     </thead>
 <!-- table body to be printed via php script: loop with table rows-->
                     <tbody>
         <?php
-            $query = "SELECT * FROM Plans WHERE `user_id` = '".$_SESSION['id']."'" ;
-            $result = mysqli_query($link,$query) ;	
-            if (mysqli_num_rows($result) > 0) 
+            if (count($_SESSION['user_plans']) > 0) 
             {
-                while($row = mysqli_fetch_assoc($result))
+                $planID = 0;
+                foreach ($_SESSION['user_plans'] as $plan)
                 {
+                    $position  = $plan[0]['position'];
+                    $tech_covered = ucwords(implode(", ", $plan[0]['tech_combo']));
+                    $plan_date = $plan[0]['time_stamp'];
+                    $total_price  = $plan[0]['total_price'];
+                    $total_length = $plan[0]['total_length'] ;          
                     ?>
                         <tr>
-                            <th scope="row"><?php echo($row['position']);?></th>
-                            <td>12/12/2018</td>
-                            <td> 
-                              <form action = "viewPlan.php?<?php echo($row['id']);?>" method="post">
-                                <input type="hidden" name="ViewID" value="<?php echo $row['id']; ?>">
-                                <input type ="submit" class = "btn btn-success" value = "View Plan">
-                              </form>
+                            <th scope="row"><?php echo("Plan ".($planID + 1)); ?></th>
+                            <td class="center"><?php echo($position); ?></td>
+                            <td class="center"><?php echo($tech_covered); ?></td>
+                            <td class="center"><?php echo($plan_date); ?></td>
+                            <td>
+                                <form   action="viewplan2.php" method="POST">
+                                    <input type="hidden" name="view_plan_id" value="<?php echo($planID);?>">
+                                    <input type="submit" class="btn btn-success" value="View Plan">
+                                </form>
+                                
                             </td>
-                            <td> 
-                              <form action = "deletePlan.php?<?php echo($row['id']);?>" method="post">
-                                <input type="hidden" name="DeleteID" value="<?php echo $row['id']; ?>">
-                                <input type ="submit" class = "btn btn-danger" value = "Delete">
-                              </form>
-                            </td> 
                         </tr>
                     <?php
+                    $planID++;
                 }
             }
             else
             {
                 ?>
                     <tr>
-                        <th scope="row">You don't have any plans!</th>
+                        <th scope="row">You don't have any saved plans!</th>
                     </tr>  
                 <?php
             }
@@ -131,12 +140,13 @@
                     </table>
                 </div> 
 			</div>
-
             <div class = "row">
-                <div class="col-md-6 col-md-offset-2 " id="FourthRow">
-                <a class="btn btn-primary btn-lg" href="GeneratePlan.php" role="button">Create a New Plan</a>
+                <div class="col-md-6 col-md-offset-5" id="FourthRow">
+                <a class=" btn btn-primary btn-lg" href="GeneratePlan.php" role="button">Create a New Plan</a>
                 </div>
             </div>
+            <br/>
+            <br/>
             
         </div>
 	</body>

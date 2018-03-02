@@ -113,7 +113,8 @@ include ("BootstrapCDN.php");
 						if($message)
 						{
 							echo '<div class = "alert alert-success">'.addslashes($message).'</div>' ;
-						}						
+						}
+                
 					?>
 
                     <p class="bold marginTop whiteColor"> Interested? Sign Up Below:</p>
@@ -122,20 +123,19 @@ include ("BootstrapCDN.php");
 
                         <div class="form-group">
                             <label for="email" class="whiteColor">Email Address</label>
-
                             <input type="email" class="form-control" placeholder="Your Email Address" name="email" id="email" value="<?php echo addslashes($_POST['email']); ?>" />
 
                         </div>
 
                         <div class="form-group">
                             <label for="password" class="whiteColor">Password</label>
-
                             <input type="password" class="form-control" placeholder="New Password" name="password" value="<?php echo addslashes($_POST['password']); ?>" />
                         </div>
 
                         <div>
                             <input type="submit" name="submit" value="Sign Up" class="btn btn-success btn-lg marginTop" />
                         </div>
+                        
                     </form>
             </div>
         </div>
