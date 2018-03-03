@@ -1,6 +1,6 @@
 <?php 
-include ("login.php"); 
-include ("BootstrapCDN.php");
+include ("Web_App/Connection/login.php"); 
+include ("Web_App/Connection/BootstrapCDN.php");
 ?>
 <!DOCTYPE html>
 <html lang="en">
