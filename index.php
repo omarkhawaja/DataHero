@@ -18,7 +18,7 @@ include ("Web_App/Connection/BootstrapCDN.php");
         }
 
         #topContainer {
-            background-image: url("Assets/bg3.jpeg");
+            background-image: url("Web_App/Assets/bg3.jpeg");
             width: 100%;
             height: 100%;
             background-repeat: no-repeat;
@@ -124,7 +124,6 @@ include ("Web_App/Connection/BootstrapCDN.php");
                         <div class="form-group">
                             <label for="email" class="whiteColor">Email Address</label>
                             <input type="email" class="form-control" placeholder="Your Email Address" name="email" id="email" value="<?php echo addslashes($_POST['email']); ?>" />
-
                         </div>
 
                         <div class="form-group">

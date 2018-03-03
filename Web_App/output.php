@@ -1,8 +1,8 @@
 <?php 
-    include ("login.php");
-    include ("navBar.php");
+    include ("Connection/login.php");
+    include ("Connection/navBar.php");
 
-    if (is_null($_SESSION['id'] )) header("Location:index.php") ;
+    if (is_null($_SESSION['id'] )) header("Location:../index.php") ;
 
 $position   = "position=";
 $budget     = "budget=";

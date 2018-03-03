@@ -1,10 +1,10 @@
 <?php 
 
-    include ("login.php");
-    include ("BootstrapCDN.php");
-    include ("navBar.php");
+    include ("Connection/login.php");
+    include ("Connection/BootstrapCDN.php");
+    include ("Connection/navBar.php");
 
-    if (is_null($_SESSION['id'])) header("Location:index.php") ;
+    if (is_null($_SESSION['id'] )) header("Location:../index.php") ;
 ?>
 <!DOCTYPE html>
 <html lang="en">

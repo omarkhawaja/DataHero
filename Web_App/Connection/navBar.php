@@ -32,19 +32,19 @@ include ("BootstrapCDN.php");
 
                 <div class="pull-left">
                     <ul class="navbar-nav nav">
-                        <li><a href="main.php">Dashboard</a></li>
+                        <li><a href="../Web_App/main.php">Dashboard</a></li>
                     </ul>
                 </div>
                 <div class="pull-left">
                     <ul class="navbar-nav nav">
-                        <li><a href="generatePlan.php">Create Plan</a></li>
+                        <li><a href="../Web_App/generatePlan.php">Create Plan</a></li>
                     </ul>
                 </div>
 
                 <div class=" pull-right">
-                    <ul class="navbar-nav nav ">
+                    <ul class="navbar-nav nav">
                         <li> <a href="manageProfile.php">My Profile</a></li>
-                        <li> <a href="index.php?logout=1">Log Out</a></li>
+                        <li> <a href="../index.php?logout=1">Log Out</a></li>
                     </ul>
                 </div>
             </div>

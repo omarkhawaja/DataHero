@@ -2,7 +2,7 @@
     include ("Connection/login.php");
     include ("Connection/navBar.php");
 
-    if (is_null($_SESSION['id'] )) header("Location:index.php") ;
+    if (is_null($_SESSION['id'] )) header("Location:../index.php") ;
 
     $_SESSION['user_plans'] = "";
     $user_plans_ep = "plans/user/id=".$_SESSION['id'] ;
@@ -142,7 +142,7 @@
 			</div>
             <div class = "row">
                 <div class="col-md-6 col-md-offset-5" id="FourthRow">
-                <a class=" btn btn-primary btn-lg" href="GeneratePlan.php" role="button">Create a New Plan</a>
+                <a class=" btn btn-primary btn-lg" href="generatePlan.php" role="button">Create a New Plan</a>
                 </div>
             </div>
             <br/>
