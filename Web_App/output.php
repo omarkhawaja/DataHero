@@ -52,17 +52,14 @@ if ($relaxed == 1)
             margin-bottom: 60px;
             text-align: left;
         }
-
         .h1 {
             font-size: 150%;
         }
-
         .center {
             text-align: center;
         }
     </style>
 </head>
-
 <body data-spy="scroll" data-target=".navbar-collapse">
 
     <div class="container contentContainer" id="topContainer">
@@ -73,10 +70,10 @@ if ($relaxed == 1)
             </div>
         </div>
         <div class="row">
-            <div class = "col  col-md-offset-3">
+            <div class="col  col-md-offset-3">
                 <?php 
                     echo $message;
-                ?> 
+                ?>
             </div>
         </div>
 
@@ -119,16 +116,18 @@ if ($relaxed == 1)
                                 <th scope="row">
                                     <?php echo("Plan ".($planID + 1)); ?> </th>
                                 <td class="center">
-                                    <?php echo($course_count); ?></td>
+                                    <?php echo($course_count); ?>
+                                </td>
                                 <td class="center">
-                                    <?php echo($tech_covered); ?></td>
+                                    <?php echo($tech_covered); ?>
+                                </td>
                                 <td class="center">
                                     <?php echo($total_price); ?> </td>
                                 <td class="center">
                                     <?php echo($total_length); ?> </td>
 
                                 <td>
-                                    <form  target="_blank" action="viewplan.php" method="POST">
+                                    <form target="_blank" action="viewplan.php" method="POST">
                                         <input type="hidden" name="view_plan_id" value="<?php echo($planID);?>">
                                         <input type="submit" class="btn btn-success" value="View Plan">
                                     </form>
@@ -143,7 +142,7 @@ if ($relaxed == 1)
             {
                 ?>
                                 <tr>
-                                    <th scope="row">INVALID INPUTS</th>
+                                    <th scope="row">Invalid Model Inputs. Please try again.</th>
                                 </tr>
                                 <?php
             }
@@ -155,5 +154,4 @@ if ($relaxed == 1)
         </div>
     </div>
 </body>
-
 </html>
