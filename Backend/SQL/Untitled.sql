@@ -34,6 +34,8 @@ Insert into Combination_skills (combination_id, skill_id) values (4,7);
 
 Insert into Position_combinations (position_id, combination_id) values (2,3);
 Insert into Position_combinations (position_id, combination_id) values (2,4);
+Insert into Position_combinations (position_id, combination_id) values (1,1);
+Insert into Position_combinations (position_id, combination_id) values (1,2);
 ######################################################################################
 
 
@@ -55,4 +57,6 @@ drop table Position_combinations;
 drop table Technical_combinations;
 
 select * from Skills;
-call test2();
+call test();
+
+select * from Courses where course_provider_id = 4;

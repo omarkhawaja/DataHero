@@ -20,15 +20,15 @@ cur.execute('SET character_set_connection=utf8;')
 class OR_inputs(object):
 	def __init__(self, provider,rating=None):
 		super(OR_inputs, self).__init__()
-		self.provider = provider
+		self.provider = ','.join([str(i) for i in provider])
 		self.rating = rating
 
 	def fetch_courses(self):
 		try:
 			if self.rating == None:
-				cur.execute('''SELECT id,rating,price,length FROM Courses WHERE course_provider_id = {};'''.format(self.provider))
+				cur.execute('''SELECT id,rating,price,length FROM Courses WHERE course_provider_id in ({});'''.format(self.provider))
 			else:
-				cur.execute('''SELECT id,rating,price,length FROM Courses WHERE course_provider_id = {} AND rating >= {};'''.format(self.provider,self.rating))
+				cur.execute('''SELECT id,rating,price,length FROM Courses WHERE course_provider_id in ({}) AND rating >= {};'''.format(self.provider,self.rating))
 
 			data = cur.fetchall()
 			courses = [int(x[0]) for x in data]
@@ -49,12 +49,12 @@ class OR_inputs(object):
 		cur.execute('''select x.id,
 		case when y.skill_id is null then 0 else 1 end as skill_code 
 		from
-		(select x.id,s.id as 'skill' from Courses x cross join (select id from Skills order by id asc)s where x.course_provider_id = 3)x
+		(select x.id,s.id as 'skill' from Courses x cross join (select id from Skills order by id asc)s where x.course_provider_id in ({}))x
 		left outer join
 		(select course_id,skill_id from Course_skills order by course_id,skill_id asc)y
 		on x.id = y.course_id and x.skill = y.skill_id
 		order by x.id,x.skill asc; 
-		''')
+		'''.format(provider))
 
 		data_skills = cur.fetchall()
 		all_skills = [x[1] for x in data_skills]
@@ -73,12 +73,12 @@ class OR_inputs(object):
 		cur.execute('''select x.id,
 		case when (y.skill_lvl is null or y.skill_lvl = 0) then 0 else 1 end as skill_lvl
 		from
-		(select x.id,s.id as 'skill' from Courses x cross join (select id from Skills order by id asc)s where x.course_provider_id = 3)x
+		(select x.id,s.id as 'skill' from Courses x cross join (select id from Skills order by id asc)s where x.course_provider_id in ({}))x
 		left outer join
 		(select course_id,skill_id,skill_lvl from Course_skills order by course_id,skill_id asc)y
 		on x.id = y.course_id and x.skill = y.skill_id
 		order by x.id,x.skill asc;		
-		''')
+		'''.format(provider))
 
 		data_skills = cur.fetchall()
 		all_skills = [x[1] for x in data_skills]

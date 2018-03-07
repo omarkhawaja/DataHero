@@ -51,7 +51,7 @@ class Course(object):
                 self.level
               ))
               conn.commit()
-            except e:
+            except Exception as e:
               print(e)
         else:
             print("Record already exists")
@@ -86,8 +86,8 @@ class Instructor(object):
               ))
               conn.commit()
               return cur.lastrowid
-            except e:
-              print(e)
+            except Exception as e:
+              return 613
         else:
             print("Record already exists")
             return inst_id

@@ -34,7 +34,8 @@ class Create_plan(Resource):
 
         position,budget,timeAllocation,user_skills = parse_request(skills_needed_string)
 
-        inputs = OR_inputs(3)
+        course_providers = [2,3,4]
+        inputs = OR_inputs(course_providers)
         courses,ratings,prices,lengths = inputs.fetch_courses()
         courseSkill_matrix = inputs.fetch_courseSkill_matrix(len(courses))
         courseSkillLvl_matrix = inputs.fetch_courseSkillLvls_matrix(len(courses))

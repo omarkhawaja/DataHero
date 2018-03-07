@@ -47,8 +47,10 @@ CREATE TABLE Course_skills (
     `course_id` INT NOT NULL,
     `skill_id` INT,
     `skill_lvl` INT,
-    FOREIGN KEY (course_id) REFERENCES 	Courses(id),
+    FOREIGN KEY (course_id) REFERENCES 	Courses(id)
+    ON DELETE CASCADE,
 	FOREIGN KEY (skill_id) REFERENCES Skills(id)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE Users (
@@ -66,7 +68,8 @@ CREATE TABLE User_info (
     `current_job_position` VARCHAR (200),
     `education` VARCHAR (200),
     `industry`	VARCHAR (200),
-    FOREIGN KEY (id) REFERENCES Users(id),
+    FOREIGN KEY (id) REFERENCES Users(id)
+    ON DELETE CASCADE,
 	PRIMARY KEY (id)
 );
 
@@ -79,24 +82,31 @@ CREATE TABLE Plans (
     `number_courses` INT,
     `technical_skills_id` INT,
     `time_stamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES Users(id),
-    FOREIGN KEY (position_id) REFERENCES Positions(id),
-    FOREIGN KEY (technical_skills_id) REFERENCES Technical_combinations(id),
+    FOREIGN KEY (user_id) REFERENCES Users(id)
+    ON DELETE CASCADE,
+    FOREIGN KEY (position_id) REFERENCES Positions(id)
+    ON DELETE CASCADE,
+    FOREIGN KEY (technical_skills_id) REFERENCES Technical_combinations(id)
+    ON DELETE CASCADE,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE Plan_skills (
     `plan_id` INT NOT NULL,
     `skill_id` INT NOT NULL,
-    FOREIGN KEY (plan_id) REFERENCES 	Plans(id),
+    FOREIGN KEY (plan_id) REFERENCES 	Plans(id)
+    ON DELETE CASCADE,
 	FOREIGN KEY (skill_id) REFERENCES Skills(id)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE Plan_courses (
     `plan_id` INT NOT NULL,
     `course_id` INT NOT NULL,
-    FOREIGN KEY (plan_id) REFERENCES 	Plans(id),
+    FOREIGN KEY (plan_id) REFERENCES 	Plans(id)
+    ON DELETE CASCADE,
 	FOREIGN KEY (course_id) REFERENCES Courses(id)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE Positions (
@@ -110,8 +120,10 @@ CREATE TABLE Position_skills (
 	`position_id` INT NOT NULL,
 	`skill_id` INT NOT NULL, 
 	`skill_lvl` INT,
-	FOREIGN KEY (position_id) REFERENCES Positions(id),
+	FOREIGN KEY (position_id) REFERENCES Positions(id)
+    ON DELETE CASCADE,
 	FOREIGN KEY (skill_id) REFERENCES Skills(id)
+    ON DELETE CASCADE
    );
    
 CREATE TABLE Technical_combinations (
@@ -125,15 +137,19 @@ CREATE TABLE Combination_skills (
 	`combination_id` INT NOT NULL,
 	`skill_id` INT NOT NULL, 
 	`skill_lvl` INT,
-	FOREIGN KEY (combination_id) REFERENCES Technical_combinations(id),
+	FOREIGN KEY (combination_id) REFERENCES Technical_combinations(id)
+    ON DELETE CASCADE,
 	FOREIGN KEY (skill_id) REFERENCES Skills(id)
+    ON DELETE CASCADE
    );
    
 CREATE TABLE Position_combinations (
 	`position_id` INT NOT NULL,
 	`combination_id` INT NOT NULL, 
-	FOREIGN KEY (position_id) REFERENCES Positions(id),
+	FOREIGN KEY (position_id) REFERENCES Positions(id)
+    ON DELETE CASCADE,
 	FOREIGN KEY (combination_id) REFERENCES Technical_combinations(id)
+    ON DELETE CASCADE
    );
 
 CREATE TABLE Scraper_logs (
