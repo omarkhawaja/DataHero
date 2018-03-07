@@ -27,7 +27,7 @@ include ("Web_App/Connection/BootstrapCDN.php");
         }
 
         #topRow {
-            margin-top: 80px;
+            margin-top: 40px;
             text-align: center;
         }
 
@@ -40,9 +40,9 @@ include ("Web_App/Connection/BootstrapCDN.php");
         }
 
         .marginTop {
-            margin-top: 30px;
+            margin-top: 20px;
         }
-        
+
         .marginBottom {
             margin-bottom: 0px;
         }
@@ -54,45 +54,49 @@ include ("Web_App/Connection/BootstrapCDN.php");
         .center {
             text-align: center;
         }
+        .wide{
+    
+        width:175px;
+        }
     </style>
 </head>
 
 <body data-spy="scroll" data-target=".navbar-collapse">
 
-<div class="navbar navbar-default marginBottom">
-    <div class="container-fluid">
-        <div class="navbar-header">
+    <div class="navbar navbar-default marginBottom">
+        <div class="container-fluid">
+            <div class="navbar-header">
 
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
 						<span class="sr-only">Toggle Navigation </span>
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 				</button>
 
-            <a href="index.php" class="navbar-brand">Data Hero</a>
-        </div>
-        
-        <div class="collapse navbar-collapse">
-            <form method="POST" class="navbar-form navbar-right">
-                
-                <div class="form-group">
-                    <input type="email" placeholder="Email" class="form-control" name="loginemail" id="loginemail" value="<?php echo addslashes($_POST['loginemail']); ?>">
-                </div>
+                <a href="index.php" class="navbar-brand">Data Hero</a>
+            </div>
 
-                <div class="form-group">
-                    <input type="password" placeholder="Password" class="form-control" name="loginpassword" value="<?php echo addslashes($_POST['loginpassword']); ?>">
-                </div>
+            <div class="collapse navbar-collapse">
+                <form method="POST" class="navbar-form navbar-right">
 
-                <div class="form-group">
-                    <input type="submit" class="btn btn-success" name="submit2" value="Log In" />
-                </div>
+                    <div class="form-group">
+                        <input type="email" placeholder="Email" class="form-control" name="loginemail" id="loginemail" value="<?php echo addslashes($_POST['loginemail']); ?>">
+                    </div>
 
-            </form>
+                    <div class="form-group">
+                        <input type="password" placeholder="Password" class="form-control" name="loginpassword" value="<?php echo addslashes($_POST['loginpassword']); ?>">
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-success" name="submit2" value="Log In" />
+                    </div>
+
+                </form>
+            </div>
         </div>
     </div>
-</div>
-    
+
     <div class="container" id="topContainer">
 
         <div class="row">
@@ -118,7 +122,7 @@ include ("Web_App/Connection/BootstrapCDN.php");
 					?>
 
                     <p class="bold marginTop whiteColor"> Interested? Sign Up Below:</p>
-                
+
                     <form method="POST" class="marginTop">
 
                         <div class="form-group">
@@ -131,13 +135,19 @@ include ("Web_App/Connection/BootstrapCDN.php");
                             <input type="password" class="form-control" placeholder="New Password" name="password" value="<?php echo addslashes($_POST['password']); ?>" />
                         </div>
 
-                        <div>
-                            <input type="submit" name="submit" value="Sign Up" class="btn btn-success btn-lg marginTop" />
+                        <div class="form-group">
+                            <input type="submit" name="submit" value="Sign Up" class="btn btn-success btn-lg marginTop wide" />
                         </div>
-                        
+                    </form>
+                    <p class="bold marginTop whiteColor"> Or continue as guest:</p>
+                    <form method="post">
+                    <div class="form-group">
+                        <input type="submit" name="submit3" value="Sign in as Guest" class="btn btn-primary btn-lg wide" />
+                    </div>
                     </form>
             </div>
         </div>
     </div>
 </body>
+
 </html>

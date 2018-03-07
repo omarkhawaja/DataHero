@@ -28,6 +28,15 @@
             $button .= '">&laquo; Back to Suggested Plans</button></div>';
 
         }
+        elseif ($_SESSION['guest'])
+        {
+            $message =  '<div class = "center alert alert-danger">Unable to save plan while signed in as guest. Please create a Data Hero account and try again!</div>' ;
+            $button  = '<div class = "col center wide"><button class="btn btn-secondary" type="button" onclick="';
+            $button .= "window.open('', '_self', ''); window.close();";
+            $button .= '">&laquo; Back to Suggested Plans</button></div>';
+            
+        }
+
         else {
             $message =  '<div class = "center alert alert-danger">Error While Saving Plan. Please Try Again Later!</div>' ;
             $button  = '<div class = "col center wide"><button class="btn btn-secondary" type="button" onclick="';
