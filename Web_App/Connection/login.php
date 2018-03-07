@@ -92,4 +92,11 @@
 				$error =  "We could not find a user with that email and password. Please try again!<br/>New user? Please sign up below:" ;
 			}
 	}
+    if($_POST['submit3']=="Sign in as Guest")
+    {
+        $_SESSION['guest'] = true ;
+        $_SESSION['id'] = "guest" ;
+        $_SESSION['guest_message'] =   '<div class = "alert alert-danger">You are signed in as guest. any plans you generate will not be saved and will be lost permanently.</div>' ;
+        header ("Location:Web_App/main.php") ;
+    }
 ?>
