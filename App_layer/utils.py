@@ -26,18 +26,8 @@ def parse_normal(request_string):
 	else:
 		return None
 
-def clean_edx_prices(prices):
-	if isinstance(prices[0],str):
-		cleaned_prices = [float(s.split("$",1)[1].replace('USD','').strip()) if '$' in s else 0 for s in prices]
-		return cleaned_prices
-	else:
-		return prices
-
-def clean_coursera_prices(prices):
-	pass
-
 def get_total_price(prices):
-	cleaned_prices = clean_edx_prices(prices)
+	cleaned_prices = [float(x) for x in prices]
 	total_price = sum(cleaned_prices)
 	return total_price
 
