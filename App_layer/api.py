@@ -34,7 +34,7 @@ class Create_plan(Resource):
 
         position,budget,timeAllocation,user_skills = parse_request(skills_needed_string)
 
-        course_providers = [2,3,4]
+        course_providers = [3,4]
         inputs = OR_inputs(course_providers)
         courses,ratings,prices,lengths = inputs.fetch_courses()
         courseSkill_matrix = inputs.fetch_courseSkill_matrix(len(courses))
@@ -108,4 +108,4 @@ api.add_resource(Plan_delete, '/delete_plan')
 api.add_resource(User_plans, '/plans/user/<user_id>')
 
 if __name__ == '__main__':
-     app.run()
+     app.run(host='0.0.0.0', port=5000)

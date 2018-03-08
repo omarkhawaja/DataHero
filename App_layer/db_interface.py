@@ -54,7 +54,7 @@ class OR_inputs(object):
 		(select course_id,skill_id from Course_skills order by course_id,skill_id asc)y
 		on x.id = y.course_id and x.skill = y.skill_id
 		order by x.id,x.skill asc; 
-		'''.format(provider))
+		'''.format(self.provider))
 
 		data_skills = cur.fetchall()
 		all_skills = [x[1] for x in data_skills]
@@ -78,7 +78,7 @@ class OR_inputs(object):
 		(select course_id,skill_id,skill_lvl from Course_skills order by course_id,skill_id asc)y
 		on x.id = y.course_id and x.skill = y.skill_id
 		order by x.id,x.skill asc;		
-		'''.format(provider))
+		'''.format(self.provider))
 
 		data_skills = cur.fetchall()
 		all_skills = [x[1] for x in data_skills]

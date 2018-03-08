@@ -33,6 +33,9 @@ def clean_edx_prices(prices):
 	else:
 		return prices
 
+def clean_coursera_prices(prices):
+	pass
+
 def get_total_price(prices):
 	cleaned_prices = clean_edx_prices(prices)
 	total_price = sum(cleaned_prices)
@@ -100,6 +103,4 @@ def add_tech_combo(needed_skills,tech_skill_combo):
 	return needed_skills_with_tech_combo
 
 if __name__ == '__main__':
-	x,y,z,v = parse_request("budget=5&length=4&position=1&skills=4,15,55&levels=0,1,0")
-	a = parse_normal("position_id=2")
-	print(a)
+	pass
