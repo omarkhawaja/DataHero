@@ -48,7 +48,7 @@ def run_algorithm(courses,courseSkills,courseLevel,cost,ratings,lengths,timeAllo
         print('Error code ' + str(e.errno) + ": " + str(e))
 
     #model is infeasible
-    except AttributeError:
+    except Exception as e:
         relaxed = 1
         if m.status == GRB.Status.INFEASIBLE:
             print("Model is infeasible. Calculating IIS..")
