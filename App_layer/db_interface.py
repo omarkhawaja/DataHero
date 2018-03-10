@@ -33,13 +33,12 @@ class OR_inputs(object):
 			data = cur.fetchall()
 			courses = [int(x[0]) for x in data]
 			ratings = [float(x[1]) for x in data]
-			prices = [x[2] for x in data]
+			prices = [float(x[2]) for x in data]
 			lengths = [float(x[3]) for x in data]
 
-			cleaned_prices = [float(s.split("$",1)[1].replace('USD','').strip()) if '$' in s else 0 for s in prices]
 			cleaned_ratings = [1000 if x == 0.0 else x for x in ratings]
 
-			return courses,cleaned_ratings,cleaned_prices,lengths
+			return courses,cleaned_ratings,prices,lengths
 
 		except Exception as e:
 			print(e)
