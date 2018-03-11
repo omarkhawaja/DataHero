@@ -6,6 +6,9 @@ def run_algorithm(courses,courseSkills,courseLevel,cost,ratings,lengths,timeAllo
         normalized_denominator = sum([(float(x)*float(y)) for x,y in zip(cost,lengths)])
         normalized_cost_and_length_score = [((float(x)*float(y))/normalized_denominator) for x,y in zip(cost,lengths)]
 
+        print(neededSkills)
+        print('###############')
+        print(skillLvl_needed)
         # Create a new model
         m = Model()
 
