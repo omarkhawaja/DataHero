@@ -1,0 +1,28 @@
+use fydp;
+
+insert into Skill_extraction (skill,type) values ('supervised learning','type');
+SET @skill_id_ = LAST_INSERT_ID();
+insert into Keywords (keyword) values ('decision trees');
+SET @keyword_id_ = LAST_INSERT_ID();
+insert into Skill_keywords (skill_id,keyword_id) values (@skill_id_,@keyword_id_);
+insert into Keywords (keyword) values ('Naive Bayes classification');
+SET @keyword_id_ = LAST_INSERT_ID();
+insert into Skill_keywords (skill_id,keyword_id) values (@skill_id_,@keyword_id_);
+insert into Keywords (keyword) values ('Basian');
+SET @keyword_id_ = LAST_INSERT_ID();
+insert into Skill_keywords (skill_id,keyword_id) values (@skill_id_,@keyword_id_);
+insert into Keywords (keyword) values ('Ordinary Least Squares regression');
+SET @keyword_id_ = LAST_INSERT_ID();
+insert into Skill_keywords (skill_id,keyword_id) values (@skill_id_,@keyword_id_);
+insert into Keywords (keyword) values ('Logistic regression');
+SET @keyword_id_ = LAST_INSERT_ID();
+insert into Skill_keywords (skill_id,keyword_id) values (@skill_id_,@keyword_id_);
+insert into Keywords (keyword) values ('Neural networks');
+SET @keyword_id_ = LAST_INSERT_ID();
+insert into Skill_keywords (skill_id,keyword_id) values (@skill_id_,@keyword_id_);
+insert into Keywords (keyword) values ('Support vector machines');
+SET @keyword_id_ = LAST_INSERT_ID();
+insert into Skill_keywords (skill_id,keyword_id) values (@skill_id_,@keyword_id_);
+insert into Keywords (keyword) values ('Ensemble methods');
+SET @keyword_id_ = LAST_INSERT_ID();
+insert into Skill_keywords (skill_id,keyword_id) values (@skill_id_,@keyword_id_);
