@@ -189,3 +189,18 @@ CREATE TABLE Skill_keywords(
     ON DELETE CASCADE,
     CONSTRAINT keyword_skill_unique UNIQUE (skill_id,keyword_id)
 );
+
+CREATE TABLE Skill_keyword_loading(
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `skill` VARCHAR(100),
+    `keyword` VARCHAR(100),
+    `type` VARCHAR(100),
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE Position_skill_loading(
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `position` VARCHAR(100),
+    `skill` VARCHAR(100),
+    PRIMARY KEY (id)
+);

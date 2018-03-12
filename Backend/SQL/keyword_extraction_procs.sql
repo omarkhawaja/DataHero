@@ -1,8 +1,10 @@
+use fydp;
 #This file includes all functions and procs used for the keyword extraction procedure
 #At the end are the lines to call when running the keyword extraction process
 
 #FUNCTIONS
 /*
+Keyword lookup for the potential skill
 Input: keyword: word to be searched for
           text_to_search: text to search in
 Output: Y if keyword is found in text, N if keyword is not found in text to search
@@ -24,6 +26,7 @@ END$$
 DELIMITER ;
 
 /*
+Keyword lookup for the skill keywords 
 Input: keyword: word to be searched for
           text_to_search: text to search in
 Output: Y if keyword is found in text, N if keyword is not found in text to search
@@ -52,8 +55,8 @@ The function will check if a skill exists in the Skills table if it does it will
 it will insert it and then return its id
 */
 DELIMITER $$
-DROP FUNCTION IF EXISTS check_skill$$
-CREATE FUNCTION check_skill(skill_name VARCHAR(100), skill_type VARCHAR(100)) RETURNS INTEGER
+DROP FUNCTION IF EXISTS check_skill_keyword_extraction$$
+CREATE FUNCTION check_skill_keyword_extraction(skill_name VARCHAR(100), skill_type VARCHAR(100)) RETURNS INTEGER
 BEGIN
 	DECLARE skill_found INTEGER;
 	DECLARE skill_id INTEGER;
@@ -81,11 +84,13 @@ CREATE PROCEDURE keyword_extraction()
 BEGIN
 	DECLARE id_num INTEGER;
     DECLARE descrip TEXT;
+    DECLARE title TEXT;
+    DECLARE description_ TEXT;
     DECLARE course_lvl INTEGER;
 	DECLARE exit_loop INTEGER DEFAULT 0; 
     
 	DECLARE courses_cursor CURSOR FOR
-	SELECT id,description,`level` FROM fydp.Courses;
+	SELECT id,`name`,description,`level` FROM fydp.Courses;
     
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET exit_loop = 1;
 	
@@ -93,13 +98,15 @@ BEGIN
     
 	get_courses: LOOP
     
-		FETCH  courses_cursor INTO id_num, descrip,course_lvl;
+		FETCH  courses_cursor INTO id_num,title,descrip,course_lvl;
     
 		IF exit_loop = 1 THEN
 			LEAVE get_courses;
 		END IF;
         
-        call keyword_extraction_skill_loop(descrip,id_num,course_lvl);
+        #to search for skills and keywords in course name and description
+        select concat(title, ' ', descrip) from dual into description_;
+        call keyword_extraction_skill_loop(description_,id_num,course_lvl);
 
 	END LOOP get_courses;
     CLOSE courses_cursor;
@@ -142,7 +149,7 @@ BEGIN
         
 		select keyword_search_regex_skill(keyword_txt,description) from dual into key_found;
 		IF key_found = 'Y' THEN
-			select check_skill(keyword_txt,keyword_type) from dual into skill_id_num;
+			select check_skill_keyword_extraction(keyword_txt,keyword_type) from dual into skill_id_num;
 			INSERT INTO Course_skills(course_id,skill_id,skill_lvl) VALUES (id_num,skill_id_num,course_lvl);
 			COMMIT;
 			call keyword_extraction_keyword_loop(id_num,skill_extraction_id_num,description,skill_id_num);
@@ -229,7 +236,7 @@ BEGIN
 		FETCH  dups_cursor INTO course, skill;
     
 		IF exit_loop = 1 THEN
-		LEAVE get_dups;
+			LEAVE get_dups;
 		END IF;
         
         delete from Course_skills where course_id = course and skill_id = skill limit 1;
@@ -241,6 +248,5 @@ END$$
 DELIMITER ;
 
 #how to run the keyword extraction procedure
-truncate table Course_skills;
 call fydp.keyword_extraction();
 call fydp.delete_dups();

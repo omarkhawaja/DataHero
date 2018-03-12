@@ -1,3 +1,4 @@
+use fydp;
 #based on https://stackoverflow.com/questions/37268248/how-to-get-only-digits-from-string-in-mysql
 #works only for ints and not floats, if price is like this; 12.34 it will return 1234, becareful!!!
 DELIMITER $$

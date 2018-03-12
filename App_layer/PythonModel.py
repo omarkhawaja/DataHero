@@ -44,9 +44,6 @@ def run_algorithm(courses,courseSkills,courseLevel,cost,ratings,lengths,timeAllo
 
         return relaxed,courses_recomended
 
-    #except GurobiError as e:
-        #print('Error code ' + str(e.errno) + ": " + str(e))
-
     #model is infeasible
     except Exception as e:
         relaxed = 1

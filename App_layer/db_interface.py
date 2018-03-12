@@ -142,7 +142,7 @@ class OR_inputs(object):
 			if needed_skill == 1:
 				skills_list.append(indx + 1)
 		skills_query = ','.join([str(i) for i in skills_list])
-		
+
 		cur.execute('''select case when x.score = 0 then (-1000000) else x.score end as course_score from
 					(
 					select x.id,
@@ -312,7 +312,10 @@ class Plans(object):
 class Skills(object):
 	def __init__(self, skills):
 		super(Skills, self).__init__()
-		self.skills = ','.join([str(i) for i in skills])
+		if len(skills) != 0:
+			self.skills = ','.join([str(i) for i in skills])
+		else:
+			self.skills = None
 
 	def get_names(self):
 		cur.execute('''select skill from Skills where id in ({});'''.format(self.skills))
