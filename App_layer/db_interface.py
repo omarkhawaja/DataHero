@@ -142,8 +142,7 @@ class OR_inputs(object):
 			if needed_skill == 1:
 				skills_list.append(indx + 1)
 		skills_query = ','.join([str(i) for i in skills_list])
-		print(skills_query)
-		print(self.provider)
+		
 		cur.execute('''select case when x.score = 0 then (-1000000) else x.score end as course_score from
 					(
 					select x.id,

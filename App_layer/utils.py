@@ -89,7 +89,7 @@ def jsonify(data,fields,plan = None):
 def add_tech_combo(needed_skills,tech_skill_combo):
 	needed_skills_with_tech_combo = needed_skills[:]
 	for skill in tech_skill_combo:
-		needed_skills_with_tech_combo[skill - 1] = 0
+		needed_skills_with_tech_combo[skill - 1] = 1
 	return needed_skills_with_tech_combo
 
 if __name__ == '__main__':
