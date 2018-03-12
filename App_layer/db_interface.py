@@ -160,6 +160,7 @@ class OR_inputs(object):
 
 		data_course_scores = cur.fetchall()
 		course_scores = [float(x[0]) for x in data_course_scores]
+		return course_scores
 
 	def fetch_tech_combinations(self,position):
 		combinations_skills = {}
