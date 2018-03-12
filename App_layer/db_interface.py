@@ -315,7 +315,7 @@ class Skills(object):
 		if len(skills) != 0:
 			self.skills = ','.join([str(i) for i in skills])
 		else:
-			self.skills = None
+			self.skills = 'NULL'
 
 	def get_names(self):
 		cur.execute('''select skill from Skills where id in ({});'''.format(self.skills))
