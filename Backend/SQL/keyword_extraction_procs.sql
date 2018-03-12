@@ -73,7 +73,7 @@ DELIMITER ;
 #PROCEDURES
 /*
 This procedure loops through the course's in the Courses table and then passes each course
-with its details to the inner loop
+with its details to the skill extraction loop
 */
 DELIMITER $$
 DROP PROCEDURE IF EXISTS keyword_extraction$$
@@ -108,9 +108,10 @@ END$$
 DELIMITER ;
 
 /*
-This procedure is the keyword extraction inner loop and loops over all the keywords in the 
-Keyword table and searches for the terms in the course passed down from the outer loop proc
-If a keyword is found in the course it will be added to the Course_skills table
+This procedure is the keyword extraction skill loop and loops over all the potential skills in the 
+Skill_extraction able and searches for the terms in the course passed down from the outer loop proc
+If a Skill is found in the course it will be added to the Course_skills table and then the course information
+is passed to the keyword loop for the quality score to be calculated
 */
 DELIMITER $$
 DROP PROCEDURE IF EXISTS keyword_extraction_skill_loop$$
@@ -154,6 +155,9 @@ END$$
 DELIMITER ;
 
 /*
+This procedure is the keyword extraction keyword loop, it calculates the quality score for a 
+course teaching a particular skill by counting how many of the kewyords associated with that 
+skill are found in the course description
 */
 DELIMITER $$
 DROP PROCEDURE IF EXISTS keyword_extraction_keyword_loop$$
