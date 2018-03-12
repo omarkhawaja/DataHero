@@ -159,7 +159,7 @@ class OR_inputs(object):
 					'''.format(skills_query,self.provider))
 
 		data_course_scores = cur.fetchall()
-		print(data_course_scores[0])
+		print(float(data_course_scores[0]))
 		course_scores = [x[0] for x in data_course_scores]
 
 	def fetch_tech_combinations(self,position):
