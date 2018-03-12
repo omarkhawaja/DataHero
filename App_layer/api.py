@@ -45,9 +45,9 @@ class Create_plan(Resource):
         #to fetch the tech combination id for the plans
         i = 0
         for tech_skill_combo in combinations.values():
-
             skills_needed = add_tech_combo(needed_skills,tech_skill_combo)
-            infeasible,courses_recomended = run_algorithm(courses,courseSkill_matrix,courseSkillLvl_matrix,prices,ratings,lengths,timeAllocation,budget,skills_needed,needed_skills_lvls)
+            course_scores = inputs.fetch_course_scores(skills_needed)
+            infeasible,courses_recomended = run_algorithm(courses,courseSkill_matrix,courseSkillLvl_matrix,prices,ratings,lengths,timeAllocation,budget,skills_needed,needed_skills_lvls,course_scores)
             outputs = OR_outputs(courses_recomended)
             plan_json = outputs.fetch_course_details()
             plan_id = plan.add(position,plan_json,combination_ids[i],needed_skills)

@@ -44,7 +44,6 @@ class OR_inputs(object):
 			print(e)
 
 	def fetch_courseSkill_matrix(self,num_courses):
-
 		cur.execute('''select x.id,
 		case when y.skill_id is null then 0 else 1 end as skill_code 
 		from
@@ -134,6 +133,33 @@ class OR_inputs(object):
 				needed_levels_list[skill - 1] = 1
 
 		return needed_skills_list,needed_levels_list
+
+	def fetch_course_scores(self,needed_skills):
+		skills_list = []
+
+		#getting the id's of the needed skills skill
+		for indx,needed_skill in enumerate(needed_skills):
+			if needed_skill == 1:
+				skills_list.append(indx + 1)
+		skills_query = ','.join([str(i) for i in skills_list])
+
+		cur.execute('''select case when x.score = 0 then (-1000000) else x.score end as course_score from
+					(
+					select x.id,
+							sum(case when y.course_score is null then 0 else y.course_score end) as score
+							from
+							(select x.id,s.id as 'skill' from Courses x cross join (select id from Skills where id in({}) order by id asc)s where x.course_provider_id in ({}))x
+							left outer join
+							(select course_id,skill_id,skill_lvl,course_score from Course_skills order by course_id,skill_id asc)y
+							on x.id = y.course_id and x.skill = y.skill_id
+							group by x.id
+							order by x.id asc
+					        limit 10000
+					) x;		
+					'''.format(skills_query,self.provider))
+
+		data_course_scores = cur.fetchall()
+		course_scores = [x[1] for x in data_course_scores]
 
 	def fetch_tech_combinations(self,position):
 		combinations_skills = {}

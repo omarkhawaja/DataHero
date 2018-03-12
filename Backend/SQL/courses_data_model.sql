@@ -47,6 +47,7 @@ CREATE TABLE Course_skills (
     `course_id` INT NOT NULL,
     `skill_id` INT,
     `skill_lvl` INT,
+    `course_score` DECIMAL,
     FOREIGN KEY (course_id) REFERENCES 	Courses(id)
     ON DELETE CASCADE,
 	FOREIGN KEY (skill_id) REFERENCES Skills(id)
@@ -162,10 +163,29 @@ CREATE TABLE Scraper_logs (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE Keywords(
+CREATE TABLE Skill_extraction(
     `id` INT NOT NULL AUTO_INCREMENT,
     `skill` VARCHAR(100),
     `type` VARCHAR(100),
     `edit_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT Skill UNIQUE (skill),
     PRIMARY KEY (id)
+);
+
+CREATE TABLE Keywords(
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `keyword` VARCHAR(100),
+    `edit_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT keyword_unique UNIQUE (keyword),
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE Skill_keywords(
+	`skill_id` INT NOT NULL,
+	`keyword_id` INT NOT NULL, 
+	FOREIGN KEY (skill_id) REFERENCES Skill_extraction(id)
+    ON DELETE CASCADE,
+	FOREIGN KEY (keyword_id) REFERENCES Keywords(id)
+    ON DELETE CASCADE,
+    CONSTRAINT keyword_skill_unique UNIQUE (skill_id,keyword_id)
 );
