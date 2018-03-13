@@ -95,7 +95,7 @@ class OR_inputs(object):
 		required_skills = {}
 		needed_skills = {}
 		#0 doesn't have, 1 beginner/intermediate, 2 doesn't need
-		cur.execute('''s {};'''.format(position))
+		cur.execute('''select skill_id,skill_lvl from Position_skills where position_id = {};'''.format(position))
 		query_result = cur.fetchall()
 		required_skills = {int(x[0]):int(x[1]) for x in query_result}
 
