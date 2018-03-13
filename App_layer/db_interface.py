@@ -95,7 +95,7 @@ class OR_inputs(object):
 		required_skills = {}
 		needed_skills = {}
 		#0 doesn't have, 1 beginner/intermediate, 2 doesn't need
-		cur.execute('''select skill_id,skill_lvl from Position_skills where position_id = {};'''.format(position))
+		cur.execute('''s {};'''.format(position))
 		query_result = cur.fetchall()
 		required_skills = {int(x[0]):int(x[1]) for x in query_result}
 
@@ -154,7 +154,6 @@ class OR_inputs(object):
 							on x.id = y.course_id and x.skill = y.skill_id
 							group by x.id
 							order by x.id asc
-					        limit 10000
 					) x;		
 					'''.format(skills_query,self.provider))
 

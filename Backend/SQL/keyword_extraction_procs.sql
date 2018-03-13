@@ -202,7 +202,7 @@ BEGIN
 
 	END LOOP get_keywords;
     CLOSE keyword_cursor;
-	Set score := CAST(occurences AS DEC(12,4))/CAST(total_keywords AS DEC(12,4)); 
+	Set score := CAST(occurences AS DEC(12,4))/CAST(total_keywords AS DEC(12,4))*100; 
 	UPDATE Course_skills set course_score = score where skill_id = skill_id_table and course_id = course_id_num;
 	COMMIT;
 

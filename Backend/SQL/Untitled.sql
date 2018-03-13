@@ -22,15 +22,15 @@ Insert into Technical_combinations (name, description) values ('test combo 2','h
 Insert into Technical_combinations (name, description) values ('test combo 3','scala and hadoop');
 Insert into Technical_combinations (name, description) values ('test combo 4','python, sql, and R');
 
-Insert into Combination_skills (combination_id, skill_id) values (1,7);
-Insert into Combination_skills (combination_id, skill_id) values (1,2);
-Insert into Combination_skills (combination_id, skill_id) values (2,15);
-Insert into Combination_skills (combination_id, skill_id) values (2,19);
-Insert into Combination_skills (combination_id, skill_id) values (3,7);
-Insert into Combination_skills (combination_id, skill_id) values (3,13);
-Insert into Combination_skills (combination_id, skill_id) values (4,1);
-Insert into Combination_skills (combination_id, skill_id) values (4,2);
-Insert into Combination_skills (combination_id, skill_id) values (4,7);
+Insert into Combination_skills (combination_id, skill_id,skill_lvl) values (1,7,1);
+Insert into Combination_skills (combination_id, skill_id,skill_lvl) values (1,2,1);
+Insert into Combination_skills (combination_id, skill_id,skill_lvl) values (2,15,1);
+Insert into Combination_skills (combination_id, skill_id,skill_lvl) values (2,19,1);
+Insert into Combination_skills (combination_id, skill_id,skill_lvl) values (3,7,1);
+Insert into Combination_skills (combination_id, skill_id,skill_lvl) values (3,13,1);
+Insert into Combination_skills (combination_id, skill_id,skill_lvl) values (4,1,1);
+Insert into Combination_skills (combination_id, skill_id,skill_lvl) values (4,2,1);
+Insert into Combination_skills (combination_id, skill_id,skill_lvl) values (4,7,1);
 
 Insert into Position_combinations (position_id, combination_id) values (2,3);
 Insert into Position_combinations (position_id, combination_id) values (2,4);
@@ -88,3 +88,4 @@ drop table Skill_keywords;
 drop table Keywords;
 drop table Skill_extraction;
 drop table Skill_keyword_loading;
+truncate table Course_skills;
