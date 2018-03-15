@@ -27,7 +27,8 @@ def parse_normal(request_string):
 		return None
 
 def get_total_price(prices):
-	cleaned_prices = [float(x) for x in prices]
+	striped_prices = [0 if x == 'Free' else x.replace('$','') for x in prices]
+	cleaned_prices = [float(x) for x in striped_prices]
 	total_price = sum(cleaned_prices)
 	return total_price
 
