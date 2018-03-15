@@ -53,11 +53,13 @@ def run_algorithm(courses,courseSkills,courseLevel,cost,ratings,lengths,timeAllo
                 if c.constrName == "Budget":
                     print('Increased Budget Constraint by 25. re-running alogirthm..')
                     budget = budget + 25
+                    timeAllocation = timeAllocation + 25
                     x,y = run_algorithm(courses,courseSkills,courseLevel,cost,ratings,lengths,timeAllocation,budget,neededSkills,skillLvl_needed,course_scores)
                     break
                 elif c.constrName == "Time":
                     print('Increased Time Allocation Constraint by 25. re-running alogirthm..')
                     timeAllocation = timeAllocation + 25
+                    budget = budget + 25
                     x,y = run_algorithm(courses,courseSkills,courseLevel,cost,ratings,lengths,timeAllocation,budget,neededSkills,skillLvl_needed,course_scores)
                     break
         return relaxed,y

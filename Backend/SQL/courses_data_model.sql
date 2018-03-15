@@ -39,10 +39,11 @@ CREATE TABLE Skills (
     `id` INT NOT NULL AUTO_INCREMENT,
     `skill` VARCHAR(100) NOT NULL,
     `type` VARCHAR(100),
+    `position` INTEGER,
     `comments` VARCHAR(200),
+    FOREIGN KEY (position) REFERENCES Positions(id),
     PRIMARY KEY (id)
 );
-
 CREATE TABLE Course_skills (
     `course_id` INT NOT NULL,
     `skill_id` INT,
@@ -167,7 +168,9 @@ CREATE TABLE Skill_extraction(
     `id` INT NOT NULL AUTO_INCREMENT,
     `skill` VARCHAR(100),
     `type` VARCHAR(100),
+    `position` INT,
     `edit_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (position) REFERENCES Positions(id),
     CONSTRAINT Skill UNIQUE (skill),
     PRIMARY KEY (id)
 );
@@ -195,6 +198,8 @@ CREATE TABLE Skill_keyword_loading(
     `skill` VARCHAR(100),
     `keyword` VARCHAR(100),
     `type` VARCHAR(100),
+    `position` INT,
+    FOREIGN KEY (position) REFERENCES Positions(id),
     PRIMARY KEY (id)
 );
 

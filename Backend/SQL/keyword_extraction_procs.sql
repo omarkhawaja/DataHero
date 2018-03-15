@@ -56,16 +56,16 @@ it will insert it and then return its id
 */
 DELIMITER $$
 DROP FUNCTION IF EXISTS check_skill_keyword_extraction$$
-CREATE FUNCTION check_skill_keyword_extraction(skill_name VARCHAR(100), skill_type VARCHAR(100)) RETURNS INTEGER
+CREATE FUNCTION check_skill_keyword_extraction(skill_name VARCHAR(100), skill_type VARCHAR(100),position_id INTEGER) RETURNS INTEGER
 BEGIN
 	DECLARE skill_found INTEGER;
 	DECLARE skill_id INTEGER;
 
-	SELECT EXISTS(SELECT * FROM Skills WHERE skill = lower(skill_name)) into skill_found;
+	SELECT EXISTS(SELECT * FROM Skills WHERE skill = lower(skill_name) and position = position_id) into skill_found;
     IF skill_found = 1 THEN
-		SELECT id FROM Skills WHERE skill = skill_name into skill_id;
+		SELECT id FROM Skills WHERE skill = skill_name and position = position_id into skill_id;
     ELSE
-		INSERT INTO Skills (skill,`type`) VALUES (skill_name,skill_type);
+		INSERT INTO Skills (skill,`type`,`position`) VALUES (skill_name,skill_type,position_id);
 		SELECT LAST_INSERT_ID() into skill_id;
     END IF;
 
@@ -130,10 +130,11 @@ BEGIN
     DECLARE keyword_txt VARCHAR(100);
     DECLARE keyword_type VARCHAR(100);
     DECLARE skill_id_num INTEGER;
+    DECLARE position_ INTEGER;
     DECLARE skill_extraction_id_num INTEGER;
     
 	DECLARE keyword_cursor CURSOR FOR
-	SELECT id,skill,`type` FROM fydp.Skill_extraction;
+	SELECT id,skill,`type`,`position` FROM fydp.Skill_extraction;
     
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET exit_loop = 1;
 	
@@ -141,7 +142,7 @@ BEGIN
     
 	get_keywords: LOOP
     
-		FETCH  keyword_cursor INTO skill_extraction_id_num,keyword_txt,keyword_type;
+		FETCH  keyword_cursor INTO skill_extraction_id_num,keyword_txt,keyword_type,position_;
     
 		IF exit_loop = 1 THEN
 			LEAVE get_keywords;
@@ -149,10 +150,10 @@ BEGIN
         
 		select keyword_search_regex_skill(keyword_txt,description) from dual into key_found;
 		IF key_found = 'Y' THEN
-			select check_skill_keyword_extraction(keyword_txt,keyword_type) from dual into skill_id_num;
+			select check_skill_keyword_extraction(keyword_txt,keyword_type,position_) from dual into skill_id_num;
 			INSERT INTO Course_skills(course_id,skill_id,skill_lvl) VALUES (id_num,skill_id_num,course_lvl);
 			COMMIT;
-			call keyword_extraction_keyword_loop(id_num,skill_extraction_id_num,description,skill_id_num);
+			call keyword_extraction_keyword_loop(id_num,skill_extraction_id_num,description,skill_id_num,position_);
 		END IF;
 
 	END LOOP get_keywords;
@@ -202,7 +203,7 @@ BEGIN
 
 	END LOOP get_keywords;
     CLOSE keyword_cursor;
-	Set score := CAST(occurences AS DEC(12,4))/CAST(total_keywords AS DEC(12,4))*100; 
+	Set score := CAST(occurences AS DEC(12,4))/CAST(total_keywords AS DEC(12,4)); 
 	UPDATE Course_skills set course_score = score where skill_id = skill_id_table and course_id = course_id_num;
 	COMMIT;
 

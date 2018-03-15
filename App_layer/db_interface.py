@@ -180,8 +180,10 @@ class OR_outputs(object):
 		self.courses = [str(x) for x in courses]
 
 	def fetch_course_details(self):
-		cur.execute("""select x.id,x.name,x.price,x.rating,x.description,x.length,x.url,y.name as 'inst_name',y.rating as 'inst_rating'
-					from Courses x inner join Course_instructors y on x.instructor_id = y.id
+		cur.execute("""select x.id,x.name,x.price,z.name as 'MOOC Platform',x.description,x.length,x.url,y.name as 'inst_name',y.rating as 'inst_rating'
+					from Courses x 
+					inner join Course_instructors y on x.instructor_id = y.id 
+					inner join Course_providors z on x.course_provider_id = z.id
 					where x.id in ({}) """.format(",".join(self.courses)))
 		all_details = cur.fetchall()
 		fields = cur.description
