@@ -89,3 +89,20 @@ drop table Keywords;
 drop table Skill_extraction;
 drop table Skill_keyword_loading;
 truncate table Course_skills;
+
+
+
+
+select case when x.score = 0 then (-1000000) else x.score end as course_score from
+					(
+					select x.id,
+							sum(case when y.course_score is null then 0 else y.course_score end) as score
+							from
+							(select x.id,s.id as 'skill' from Courses x cross join (select id from Skills where id in(1,2,3,5,6,7,8,9,10,11,12) order by id asc)s where x.course_provider_id in (2,3,4))x
+							left outer join
+							(select course_id,skill_id,skill_lvl,course_score from Course_skills order by course_id,skill_id asc)y
+							on x.id = y.course_id and x.skill = y.skill_id
+							group by x.id
+							order by x.id asc
+					        limit 10000
+					) x;
